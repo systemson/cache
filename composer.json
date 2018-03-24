@@ -1,0 +1,34 @@
+{
+    "name": "amber/cache",
+    "description": "Simple Filesystem Cache.",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Deivi Peña",
+            "email": "systemson@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Amber\\Cache\\": "src/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/systemson/Filesystem"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "amber/filesystem": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
