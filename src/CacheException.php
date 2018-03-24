@@ -2,11 +2,11 @@
 
 namespace Amber\Cache\CacheException;
 
-use Psr\SimpleCache\CacheException as Interface;
+use Psr\SimpleCache\CacheException as CacheExceptionInterface;
 
 /**
  * Interface used for all types of exceptions thrown by the implementing library.
  */
-CacheException implements Interface
+class CacheException implements CacheExceptionInterface
 {
 }

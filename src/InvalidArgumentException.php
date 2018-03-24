@@ -2,7 +2,7 @@
 
 namespace Amber\Cache;
 
-use Psr\SimpleCache\InvalidArgumentException as Interface;
+use Psr\SimpleCache\InvalidArgumentException as InvalidArgumentExceptionInterface;
 
 /**
  * Exception interface for invalid cache arguments.
@@ -10,6 +10,6 @@ use Psr\SimpleCache\InvalidArgumentException as Interface;
  * When an invalid argument is passed it must throw an exception which implements
  * this interface
  */
-class InvalidArgumentException implements Interface
+class InvalidArgumentException implements InvalidArgumentExceptionInterface
 {
 }
