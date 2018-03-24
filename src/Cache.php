@@ -2,9 +2,6 @@
 
 namespace Amber\Cache;
 
-use Amber\Cache\CacheDriver;
-use Amber\Cache\FileCache;
-
 class Cache
 {
     private static $instance;
@@ -14,10 +11,9 @@ class Cache
      */
     private static function driver(CacheDriver $driver = null)
     {
-        /** Checks if the CacheDriver is already instantiated. */
-        if (!self::$instance instanceof CacheDriver)
-        {
-            /** Instantiate the CacheDriver */
+        /* Checks if the CacheDriver is already instantiated. */
+        if (!self::$instance instanceof CacheDriver) {
+            /* Instantiate the CacheDriver */
             self::$instance = $driver ?? new FileCache();
         }
 
