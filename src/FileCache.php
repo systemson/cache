@@ -2,50 +2,43 @@
 
 namespace Amber\Cache;
 
-use Amber\Sketch\Engine\Filesystem;
+use Amber\Filesystem\Filesystem;
 use Carbon\Carbon;
 
 class FileCache extends CacheDriver
 {
     /**
-     * Get and item from the cache.
+     * Get an item from the cache.
      *
-     * @param string $key     The unique key of this item in the cache.
-     * @param mixed  $default Default value to return if the key does not exist.
+     * @param string $key     The cache key.
+     * @param mixed  $default Return value if the key does not exist.
      *
      * @throws Amber\Cache\InvalidArgumentException
-     *                                              MUST be thrown if the $key string is not a legal value.
      *
      * @return mixed The cache value, or $default.
      */
     public function get($key, $default = null)
     {
         if (is_string($key)) {
-            if (Filesystem::has('tmp/cache/'.sha1($key))) {
-                $lines = explode("\r\n", Filesystem::read('tmp/cache/'.sha1($key)));
 
-                if ($lines[0] && $lines[0] <= Carbon::now()) {
-                    $this->delete($key);
-                } else {
-                    $content = unserialize($lines[1]);
-                }
+            $item = $this->getCachedItem($key);
+
+            if(!$this->isExpired($item)) {
+                return unserialize($item->value);
             }
-
-            return $content ?? $default;
         }
+
+        return $default;
     }
 
     /**
-     * Persists data in the cache, uniquely referenced by a key with an optional expiration TTL time.
+     * Store the cache item in the file system.
      *
-     * @param string                 $key   The key of the item to store.
-     * @param mixed                  $value The value of the item to store, must be serializable.
-     * @param null|int|\DateInterval $ttl   Optional. The TTL value of this item. If no value is sent and
-     *                                      the driver supports TTL then the library may set a default value
-     *                                      for it or let the driver take care of that.
+     * @param string    $key   The key of the cache item.
+     * @param mixed     $value The value of the item to store.
+     * @param null|int| $ttl   Optional. The TTL value of this item.
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *                                                   MUST be thrown if the $key string is not a legal value.
      *
      * @return bool True on success and false on failure.
      */
@@ -56,6 +49,8 @@ class FileCache extends CacheDriver
         $content = $expiration."\r\n".serialize($value);
 
         Filesystem::put('tmp/cache/'.sha1($key), $content);
+
+        return true;
     }
 
     /**
@@ -64,13 +59,14 @@ class FileCache extends CacheDriver
      * @param string $key The unique cache key of the item to delete.
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *                                                   MUST be thrown if the $key string is not a legal value.
      *
-     * @return bool True if the item was successfully removed. False if there was an error.
+     * @return bool True on success, false on error.
      */
     public function delete($key)
     {
         Filesystem::delete('tmp/cache/'.sha1($key));
+
+        return true;
     }
 
     /**
@@ -81,6 +77,8 @@ class FileCache extends CacheDriver
     public function clear()
     {
         Filesystem::deleteDir('tmp/cache');
+
+        return true;
     }
 
     /**
@@ -135,20 +133,43 @@ class FileCache extends CacheDriver
     /**
      * Determines whether an item is present in the cache.
      *
-     * NOTE: It is recommended that has() is only to be used for cache warming type purposes
-     * and not to be used within your live applications operations for get/set, as this method
-     * is subject to a race condition where your has() will return true and immediately after,
-     * another script can remove it making the state of your app out of date.
-     *
      * @param string $key The cache item key.
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *                                                   MUST be thrown if the $key string is not a legal value.
      *
      * @return bool
      */
     public function has($key)
     {
-        Filesystem::has('tmp/cache/'.sha1($key));
+        if(is_string($key)) {
+            if($this->get($key)) {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public function getCachedItem($key)
+    {
+        if (Filesystem::has('tmp/cache/'.sha1($key))) {
+            $item = explode("\r\n", Filesystem::read('tmp/cache/'.sha1($key)));
+
+        }
+        return (object) [
+            'key' => $key,
+            'expire' => $item[0] ?? null,
+            'value' => $item[1] ?? null,
+        ];
+    }
+
+    public function isExpired($item)
+    {
+        if ($item->expire && $item->expire <= Carbon::now()) {
+            $this->delete($item->key);
+            return true;
+        }
+
+        return false;
     }
 }
