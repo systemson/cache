@@ -3,9 +3,6 @@
 namespace Amber\Cache;
 
 use Amber\Sketch\Engine\Filesystem;
-use Amber\Cache\CacheDriver;
-use Amber\Cache\CacheException;
-use Amber\Cache\InvalidArgumentException;
 use Carbon\Carbon;
 
 class JsonCache extends CacheDriver
@@ -13,22 +10,21 @@ class JsonCache extends CacheDriver
     /**
      * Get and item from the cache.
      *
-     * @param string $key The unique key of this item in the cache.
+     * @param string $key     The unique key of this item in the cache.
      * @param mixed  $default Default value to return if the key does not exist.
      *
-     * @return mixed The cache value, or $default.
-     *
      * @throws Amber\Cache\InvalidArgumentException
-     *   MUST be thrown if the $key string is not a legal value.
+     *                                              MUST be thrown if the $key string is not a legal value.
+     *
+     * @return mixed The cache value, or $default.
      */
     public function get($key, $default = null)
     {
-        if(is_string($key)) {
+        if (is_string($key)) {
+            if (Filesystem::has('tmp/cache/'.sha1($key))) {
+                $lines = explode("\r\n", Filesystem::read('tmp/cache/'.sha1($key)));
 
-            if(Filesystem::has('tmp/cache/' . sha1($key))) {
-                $lines = explode("\r\n", Filesystem::read('tmp/cache/' . sha1($key)));
-
-                if($lines[0] && $lines[0] <= Carbon::now()) {
+                if ($lines[0] && $lines[0] <= Carbon::now()) {
                     $this->delete($key);
                 } else {
                     $content = json_decode($lines[1]);
@@ -48,18 +44,18 @@ class JsonCache extends CacheDriver
      *                                      the driver supports TTL then the library may set a default value
      *                                      for it or let the driver take care of that.
      *
-     * @return bool True on success and false on failure.
-     *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *   MUST be thrown if the $key string is not a legal value.
+     *                                                   MUST be thrown if the $key string is not a legal value.
+     *
+     * @return bool True on success and false on failure.
      */
     public function set($key, $value, $ttl = null)
     {
         $expiration = $ttl ? Carbon::now()->addMinutes($ttl) : null;
 
-        $content = $expiration . "\r\n" . json_encode($value);
+        $content = $expiration."\r\n".json_encode($value);
 
-        Filesystem::put('tmp/cache/' . sha1($key), $content);
+        Filesystem::put('tmp/cache/'.sha1($key), $content);
     }
 
     /**
@@ -67,14 +63,14 @@ class JsonCache extends CacheDriver
      *
      * @param string $key The unique cache key of the item to delete.
      *
-     * @return bool True if the item was successfully removed. False if there was an error.
-     *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *   MUST be thrown if the $key string is not a legal value.
+     *                                                   MUST be thrown if the $key string is not a legal value.
+     *
+     * @return bool True if the item was successfully removed. False if there was an error.
      */
     public function delete($key)
     {
-        Filesystem::delete('tmp/cache/' . sha1($key));
+        Filesystem::delete('tmp/cache/'.sha1($key));
     }
 
     /**
@@ -93,11 +89,11 @@ class JsonCache extends CacheDriver
      * @param iterable $keys    A list of keys that can obtained in a single operation.
      * @param mixed    $default Default value to return for keys that do not exist.
      *
-     * @return iterable A list of key => value pairs. Cache keys that do not exist or are stale will have $default as value.
-     *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *   MUST be thrown if $keys is neither an array nor a Traversable,
-     *   or if any of the $keys are not a legal value.
+     *                                                   MUST be thrown if $keys is neither an array nor a Traversable,
+     *                                                   or if any of the $keys are not a legal value.
+     *
+     * @return iterable A list of key => value pairs. Cache keys that do not exist or are stale will have $default as value.
      */
     public function getMultiple($keys, $default = null)
     {
@@ -111,11 +107,11 @@ class JsonCache extends CacheDriver
      *                                       the driver supports TTL then the library may set a default value
      *                                       for it or let the driver take care of that.
      *
-     * @return bool True on success and false on failure.
-     *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *   MUST be thrown if $values is neither an array nor a Traversable,
-     *   or if any of the $values are not a legal value.
+     *                                                   MUST be thrown if $values is neither an array nor a Traversable,
+     *                                                   or if any of the $values are not a legal value.
+     *
+     * @return bool True on success and false on failure.
      */
     public function setMultiple($values, $ttl = null)
     {
@@ -126,11 +122,11 @@ class JsonCache extends CacheDriver
      *
      * @param iterable $keys A list of string-based keys to be deleted.
      *
-     * @return bool True if the items were successfully removed. False if there was an error.
-     *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *   MUST be thrown if $keys is neither an array nor a Traversable,
-     *   or if any of the $keys are not a legal value.
+     *                                                   MUST be thrown if $keys is neither an array nor a Traversable,
+     *                                                   or if any of the $keys are not a legal value.
+     *
+     * @return bool True if the items were successfully removed. False if there was an error.
      */
     public function deleteMultiple($keys)
     {
@@ -146,13 +142,13 @@ class JsonCache extends CacheDriver
      *
      * @param string $key The cache item key.
      *
-     * @return bool
-     *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *   MUST be thrown if the $key string is not a legal value.
+     *                                                   MUST be thrown if the $key string is not a legal value.
+     *
+     * @return bool
      */
     public function has($key)
     {
-        Filesystem::has('tmp/cache/' . sha1($key));
+        Filesystem::has('tmp/cache/'.sha1($key));
     }
 }
