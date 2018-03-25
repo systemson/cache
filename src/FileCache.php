@@ -20,10 +20,9 @@ class FileCache extends CacheDriver
     public function get($key, $default = null)
     {
         if (is_string($key)) {
-
             $item = $this->getCachedItem($key);
 
-            if(!$this->isExpired($item)) {
+            if (!$this->isExpired($item)) {
                 return unserialize($item->value);
             }
         }
@@ -141,8 +140,8 @@ class FileCache extends CacheDriver
      */
     public function has($key)
     {
-        if(is_string($key)) {
-            if($this->get($key)) {
+        if (is_string($key)) {
+            if ($this->get($key)) {
                 return true;
             }
 
@@ -154,12 +153,12 @@ class FileCache extends CacheDriver
     {
         if (Filesystem::has('tmp/cache/'.sha1($key))) {
             $item = explode("\r\n", Filesystem::read('tmp/cache/'.sha1($key)));
-
         }
+
         return (object) [
-            'key' => $key,
+            'key'    => $key,
             'expire' => $item[0] ?? null,
-            'value' => $item[1] ?? null,
+            'value'  => $item[1] ?? null,
         ];
     }
 
@@ -167,6 +166,7 @@ class FileCache extends CacheDriver
     {
         if ($item->expire && $item->expire <= Carbon::now()) {
             $this->delete($item->key);
+
             return true;
         }
 
