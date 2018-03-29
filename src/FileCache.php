@@ -92,7 +92,7 @@ class FileCache extends CacheDriver
      */
     public function getMultiple($keys, $default = null)
     {
-        foreach($keys as $key) {
+        foreach ($keys as $key) {
             $cache[$key] = $this->get($key) ?? $default;
         }
 
@@ -111,11 +111,11 @@ class FileCache extends CacheDriver
      */
     public function setMultiple($values, $ttl = null)
     {
-          foreach($values as $key => $value) {
-              $this->set($key, $value, $ttl);
-          }
+        foreach ($values as $key => $value) {
+            $this->set($key, $value, $ttl);
+        }
 
-          return true;
+        return true;
     }
 
     /**
@@ -129,11 +129,11 @@ class FileCache extends CacheDriver
      */
     public function deleteMultiple($keys)
     {
-          foreach($keys as $key) {
-              $this->delete($key);
-          }
+        foreach ($keys as $key) {
+            $this->delete($key);
+        }
 
-          return true;
+        return true;
     }
 
     /**
