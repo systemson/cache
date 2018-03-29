@@ -4,12 +4,15 @@ namespace Amber\Cache;
 
 class Cache
 {
+    /**
+     * @var The instance of the cache driver
+     */
     private static $instance;
 
     /**
      * Singleton implementation.
      */
-    private static function driver(CacheDriver $driver = null)
+    private static function getInstance(CacheDriver $driver = null)
     {
         /* Checks if the CacheDriver is already instantiated. */
         if (!self::$instance instanceof CacheDriver) {
@@ -20,8 +23,13 @@ class Cache
         return self::$instance;
     }
 
+    public static function driver(CacheDriver $driver)
+    {
+        return self::$instance = $driver;
+    }
+
     public static function __callStatic($method, $args)
     {
-        return call_user_func_array([self::$instance ?? self::driver(), $method], $args);
+        return call_user_func_array([self::getInstance(), $method], $args);
     }
 }

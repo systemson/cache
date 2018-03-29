@@ -2,50 +2,42 @@
 
 namespace Amber\Cache;
 
-use Amber\Sketch\Engine\Filesystem;
+use Amber\Filesystem\Filesystem;
 use Carbon\Carbon;
 
 class JsonCache extends CacheDriver
 {
     /**
-     * Get and item from the cache.
+     * Get an item from the cache.
      *
-     * @param string $key     The unique key of this item in the cache.
-     * @param mixed  $default Default value to return if the key does not exist.
+     * @param string $key     The cache key.
+     * @param mixed  $default Return value if the key does not exist.
      *
      * @throws Amber\Cache\InvalidArgumentException
-     *                                              MUST be thrown if the $key string is not a legal value.
      *
-     * @return mixed The cache value, or $default.
+     * @return mixed The json cache value, or json object of $default.
      */
     public function get($key, $default = null)
     {
         if (is_string($key)) {
-            if (Filesystem::has('tmp/cache/'.sha1($key))) {
-                $lines = explode("\r\n", Filesystem::read('tmp/cache/'.sha1($key)));
+            $item = $this->getCachedItem($key);
 
-                if ($lines[0] && $lines[0] <= Carbon::now()) {
-                    $this->delete($key);
-                } else {
-                    $content = json_decode($lines[1]);
-                }
+            if (!$this->isExpired($item)) {
+                return $item->value;
             }
-
-            return $content ?? $default;
         }
+
+        return json_encode($default);
     }
 
     /**
-     * Persists data in the cache, uniquely referenced by a key with an optional expiration TTL time.
+     * Store the cache item in the file system.
      *
-     * @param string                 $key   The key of the item to store.
-     * @param mixed                  $value The value of the item to store, must be serializable.
-     * @param null|int|\DateInterval $ttl   Optional. The TTL value of this item. If no value is sent and
-     *                                      the driver supports TTL then the library may set a default value
-     *                                      for it or let the driver take care of that.
+     * @param string    $key   The key of the cache item.
+     * @param mixed     $value The value of the item to store.
+     * @param null|int| $ttl   Optional. The TTL value of this item.
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *                                                   MUST be thrown if the $key string is not a legal value.
      *
      * @return bool True on success and false on failure.
      */
@@ -56,6 +48,8 @@ class JsonCache extends CacheDriver
         $content = $expiration."\r\n".json_encode($value);
 
         Filesystem::put('tmp/cache/'.sha1($key), $content);
+
+        return true;
     }
 
     /**
@@ -64,91 +58,125 @@ class JsonCache extends CacheDriver
      * @param string $key The unique cache key of the item to delete.
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *                                                   MUST be thrown if the $key string is not a legal value.
      *
-     * @return bool True if the item was successfully removed. False if there was an error.
+     * @return bool True on success, false on error.
      */
     public function delete($key)
     {
         Filesystem::delete('tmp/cache/'.sha1($key));
+
+        return true;
     }
 
     /**
-     * Wipes clean the entire cache's keys.
+     * Deletes the cache folder.
      *
      * @return bool True on success and false on failure.
      */
     public function clear()
     {
         Filesystem::deleteDir('tmp/cache');
+
+        return true;
     }
 
     /**
-     * Obtains multiple cache items by their unique keys.
+     * Get multiple cache items.
      *
-     * @param iterable $keys    A list of keys that can obtained in a single operation.
-     * @param mixed    $default Default value to return for keys that do not exist.
+     * @param array $keys    A list of cache keys.
+     * @param mixed $default Default value for keys that do not exist.
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *                                                   MUST be thrown if $keys is neither an array nor a Traversable,
-     *                                                   or if any of the $keys are not a legal value.
      *
-     * @return iterable A list of key => value pairs. Cache keys that do not exist or are stale will have $default as value.
+     * @return array A list of key => value pairs.
      */
     public function getMultiple($keys, $default = null)
     {
+        foreach($keys as $key) {
+            $cache[$key] = $this->get($key) ?? $default;
+        }
+
+        return $cache;
     }
 
     /**
-     * Persists a set of key => value pairs in the cache, with an optional TTL.
+     * Store a set of key => value pairs in the file system.
      *
-     * @param iterable               $values A list of key => value pairs for a multiple-set operation.
-     * @param null|int|\DateInterval $ttl    Optional. The TTL value of this item. If no value is sent and
-     *                                       the driver supports TTL then the library may set a default value
-     *                                       for it or let the driver take care of that.
+     * @param array    $values A list of key => value pairs of items to store.
+     * @param null|int $ttl    Optional. The TTL value of this item.
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *                                                   MUST be thrown if $values is neither an array nor a Traversable,
-     *                                                   or if any of the $values are not a legal value.
      *
-     * @return bool True on success and false on failure.
+     * @return bool true
      */
     public function setMultiple($values, $ttl = null)
     {
+          foreach($values as $key => $value) {
+              $this->set($key, $value, $ttl);
+          }
+
+          return true;
     }
 
     /**
-     * Deletes multiple cache items in a single operation.
+     * Deletes multiple cache items.
      *
-     * @param iterable $keys A list of string-based keys to be deleted.
+     * @param array $keys A list of cache keys.
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *                                                   MUST be thrown if $keys is neither an array nor a Traversable,
-     *                                                   or if any of the $keys are not a legal value.
      *
-     * @return bool True if the items were successfully removed. False if there was an error.
+     * @return bool true
      */
     public function deleteMultiple($keys)
     {
+          foreach($keys as $key) {
+              $this->delete($key);
+          }
+
+          return true;
     }
 
     /**
      * Determines whether an item is present in the cache.
      *
-     * NOTE: It is recommended that has() is only to be used for cache warming type purposes
-     * and not to be used within your live applications operations for get/set, as this method
-     * is subject to a race condition where your has() will return true and immediately after,
-     * another script can remove it making the state of your app out of date.
-     *
      * @param string $key The cache item key.
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
-     *                                                   MUST be thrown if the $key string is not a legal value.
      *
      * @return bool
      */
     public function has($key)
     {
-        Filesystem::has('tmp/cache/'.sha1($key));
+        if (is_string($key)) {
+            if ($this->get($key)) {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public function getCachedItem($key)
+    {
+        if (Filesystem::has('tmp/cache/'.sha1($key))) {
+            $item = explode("\r\n", Filesystem::read('tmp/cache/'.sha1($key)));
+        }
+
+        return (object) [
+            'key'    => $key,
+            'expire' => $item[0] ?? null,
+            'value'  => $item[1] ?? null,
+        ];
+    }
+
+    public function isExpired($item)
+    {
+        if ($item->expire && $item->expire <= Carbon::now()) {
+            $this->delete($item->key);
+
+            return true;
+        }
+
+        return false;
     }
 }
