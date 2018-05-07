@@ -7,6 +7,24 @@ use Carbon\Carbon;
 
 class JsonCache extends CacheDriver
 {
+    /*
+     * @var $path The base path to the cache folder.
+     */
+     public $folder = '/tmp/cache';
+
+    /*
+     * @var $filesystem The file system instance.
+     */
+     public $filesystem;
+
+    /**
+     * @param string $path The base path to the cache folder.
+     */
+     public function __construct($path = null)
+     {
+         $this->filesystem = Filesystem::getInstance($path ?? getcwd());
+     }
+
     /**
      * Get an item from the cache.
      *
@@ -15,19 +33,19 @@ class JsonCache extends CacheDriver
      *
      * @throws Amber\Cache\InvalidArgumentException
      *
-     * @return mixed The json cache value, or json object of $default.
+     * @return mixed The cache value, or $default.
      */
     public function get($key, $default = null)
     {
         if (is_string($key)) {
             $item = $this->getCachedItem($key);
 
-            if (!$this->isExpired($item)) {
+            if ($item && !$this->isExpired($item)) {
                 return $item->value;
             }
         }
 
-        return json_encode($default);
+        return $default != null ? json_encode($default) : null;
     }
 
     /**
@@ -47,7 +65,7 @@ class JsonCache extends CacheDriver
 
         $content = $expiration."\r\n".json_encode($value);
 
-        Filesystem::put('tmp/cache/'.sha1($key), $content);
+        $this->filesystem->put($this->folder.'/'.sha1($key), $content);
 
         return true;
     }
@@ -63,7 +81,7 @@ class JsonCache extends CacheDriver
      */
     public function delete($key)
     {
-        Filesystem::delete('tmp/cache/'.sha1($key));
+        $this->filesystem->delete($this->folder.'/'.sha1($key));
 
         return true;
     }
@@ -75,7 +93,7 @@ class JsonCache extends CacheDriver
      */
     public function clear()
     {
-        Filesystem::deleteDir('tmp/cache');
+        $this->filesystem->deleteDir($this->folder);
 
         return true;
     }
@@ -109,9 +127,9 @@ class JsonCache extends CacheDriver
      *
      * @return bool true
      */
-    public function setMultiple($values, $ttl = null)
+    public function setMultiple($items, $ttl = null)
     {
-        foreach ($values as $key => $value) {
+        foreach ($items as $key => $value) {
             $this->set($key, $value, $ttl);
         }
 
@@ -152,21 +170,24 @@ class JsonCache extends CacheDriver
                 return true;
             }
 
-            return false;
         }
+
+        return false;
     }
 
     public function getCachedItem($key)
     {
-        if (Filesystem::has('tmp/cache/'.sha1($key))) {
-            $item = explode("\r\n", Filesystem::read('tmp/cache/'.sha1($key)));
+        if ($this->filesystem->has($this->folder.'/'.sha1($key))) {
+            $item = explode("\r\n", $this->filesystem->read($this->folder.'/'.sha1($key)));
+
+            return (object) [
+                'key'    => $key,
+                'expire' => $item[0] ?? null,
+                'value'  => $item[1] ?? null,
+            ];
         }
 
-        return (object) [
-            'key'    => $key,
-            'expire' => $item[0] ?? null,
-            'value'  => $item[1] ?? null,
-        ];
+        return;
     }
 
     public function isExpired($item)

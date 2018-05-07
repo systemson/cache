@@ -33,16 +33,18 @@ class JsonCacheTest extends TestCase
 
         $this->assertTrue($cache->has($key));
 
-        $this->assertEqual($cache->get($key), $value);
+        $this->assertSame($cache->get($key), json_encode($value));
 
-        $this->assertSame($cache->get('unkwonKey', 'default'), 'default');
+        $this->assertSame($cache->get('unkwonKey', 'default'), json_encode('default'));
 
         $this->assertTrue($cache->delete($key));
 
 
         $this->assertTrue($cache->setMultiple($multiple, 15));
 
-        $this->assertSame($cache->getMultiple(array_keys($multiple)), $multiple);
+        $this->assertSame($cache->getMultiple(array_keys($multiple)), array_map(
+            function ($value) {return json_encode($value);}, $multiple
+        ));
 
         $this->assertTrue($cache->deleteMultiple(array_keys($multiple)));
 
