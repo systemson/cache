@@ -15,7 +15,7 @@ class JsonCacheTest extends TestCase
         $key = 'key';
         $value = 'value';
 
-        for($x=0; $x < 3; $x++) {
+        for ($x = 0; $x < 3; $x++) {
             $multiple[$key.$x] = $value.$x;
         }
 
@@ -39,15 +39,15 @@ class JsonCacheTest extends TestCase
 
         $this->assertTrue($cache->delete($key));
 
-
         $this->assertTrue($cache->setMultiple($multiple, 15));
 
         $this->assertSame($cache->getMultiple(array_keys($multiple)), array_map(
-            function ($value) {return json_encode($value);}, $multiple
+            function ($value) {
+                return json_encode($value);
+            }, $multiple
         ));
 
         $this->assertTrue($cache->deleteMultiple(array_keys($multiple)));
-
 
         $content = Carbon::now()->subMinutes(15)."\r\n".serialize('value');
 
