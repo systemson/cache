@@ -10,20 +10,20 @@ class JsonCache extends CacheDriver
     /*
      * @var $path The base path to the cache folder.
      */
-     public $folder = '/tmp/cache';
+    public $folder = '/tmp/cache';
 
     /*
      * @var $filesystem The file system instance.
      */
-     public $filesystem;
+    public $filesystem;
 
     /**
      * @param string $path The base path to the cache folder.
      */
-     public function __construct($path = null)
-     {
-         $this->filesystem = Filesystem::getInstance($path ?? getcwd());
-     }
+    public function __construct($path = null)
+    {
+        $this->filesystem = Filesystem::getInstance($path ?? getcwd());
+    }
 
     /**
      * Get an item from the cache.
@@ -169,7 +169,6 @@ class JsonCache extends CacheDriver
             if ($this->get($key)) {
                 return true;
             }
-
         }
 
         return false;
@@ -186,8 +185,6 @@ class JsonCache extends CacheDriver
                 'value'  => $item[1] ?? null,
             ];
         }
-
-        return;
     }
 
     public function isExpired($item)
