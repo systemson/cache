@@ -5,8 +5,6 @@ namespace Amber\Cache\Tests;
 use Amber\Cache\Cache;
 use Amber\Cache\FileCache;
 use Amber\Cache\JsonCache;
-use Amber\Filesystem\Filesystem;
-use Carbon\Carbon;
 use PHPUnit\Framework\TestCase;
 
 class CacheTest extends TestCase

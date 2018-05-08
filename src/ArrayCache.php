@@ -7,7 +7,7 @@ class ArrayCache extends CacheDriver
     /*
      * @var $cache The array containing the cached items.
      */
-     public $cache;
+    public $cache;
 
     /**
      * Get an item from the cache.
@@ -22,7 +22,6 @@ class ArrayCache extends CacheDriver
     public function get($key, $default = null)
     {
         if (is_string($key)) {
-
             return $this->cache[$key] ?? $default;
         }
 
@@ -43,13 +42,12 @@ class ArrayCache extends CacheDriver
     public function set($key, $value, $ttl = null)
     {
         if (is_string($key)) {
-
             $this->cache[$key] = $value;
+
             return true;
         }
 
         return false;
-
     }
 
     /**
@@ -64,7 +62,6 @@ class ArrayCache extends CacheDriver
     public function delete($key)
     {
         if (is_string($key)) {
-
             unset($this->cache[$key]);
         }
 
