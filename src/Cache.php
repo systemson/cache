@@ -12,7 +12,7 @@ class Cache
     /**
      * Singleton implementation.
      */
-    private static function getInstance(CacheDriver $driver = null)
+    public static function getInstance()
     {
         /* Checks if the CacheDriver is already instantiated. */
         if (!self::$instance instanceof CacheDriver) {
