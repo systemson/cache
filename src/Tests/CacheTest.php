@@ -14,7 +14,6 @@ class CacheTest extends TestCase
 {
     public function testCache()
     {
-
         $this->assertInstanceOf(
             FileCache::class,
             Cache::getInstance()
