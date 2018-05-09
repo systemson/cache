@@ -10,6 +10,6 @@ use Psr\SimpleCache\InvalidArgumentException as InvalidArgumentExceptionInterfac
  * When an invalid argument is passed it must throw an exception which implements
  * this interface
  */
-class InvalidArgumentException implements InvalidArgumentExceptionInterface
+class InvalidArgumentException extends \InvalidArgumentException implements InvalidArgumentExceptionInterface
 {
 }

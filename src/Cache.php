@@ -2,20 +2,24 @@
 
 namespace Amber\Cache;
 
-use Amber\Cache\Driver\FileCache;
 use Psr\SimpleCache\CacheInterface;
 
 class Cache
 {
-    public $drivers = [
-        'file' => Amber\Cache\Driver\FileCache::class,
-        'json' => Amber\Cache\Driver\JsonCache::class,
-        'array' => Amber\Cache\Driver\ArrayCache::class,
-    ];
     /**
      * @var The instance of the cache driver
      */
-    private static $instance;
+    protected static $instance;
+
+    /**
+     * @var List of cache drivers.
+     */
+    protected static $drivers = [
+        'file' =>   'Amber\Cache\Driver\FileCache',
+        'json' =>   'Amber\Cache\Driver\JsonCache',
+        'array' =>  'Amber\Cache\Driver\ArrayCache',
+        'apcu' =>   'Amber\Cache\Driver\ApcuCache',
+    ];
 
     /**
      * Singleton implementation.
@@ -25,15 +29,21 @@ class Cache
         /* Checks if the use CacheInterface is already instantiated. */
         if (!self::$instance instanceof CacheInterface) {
 
-            self::$instance = new FileCache();
+            self::$instance = self::driver('file');
         }
 
         return self::$instance;
     }
 
-    public static function driver(CacheInterface $driver)
+    public static function driver($driver)
     {
-        return self::$instance = $driver;
+        if (isset(self::$drivers[$driver])) {
+            return self::$instance = new self::$drivers[$driver]();
+        } elseif (class_exists($driver)) {
+            return self::$instance = new $driver();
+        }
+
+        throw new InvalidArgumentException("Cache driver {$driver} not found or could not be instantiated.");
     }
 
     public static function __callStatic($method, $args)
