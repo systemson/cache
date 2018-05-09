@@ -15,10 +15,10 @@ class Cache
      * @var List of cache drivers.
      */
     protected static $drivers = [
-        'file' =>   'Amber\Cache\Driver\FileCache',
-        'json' =>   'Amber\Cache\Driver\JsonCache',
-        'array' =>  'Amber\Cache\Driver\ArrayCache',
-        'apcu' =>   'Amber\Cache\Driver\ApcuCache',
+        'file'  => 'Amber\Cache\Driver\FileCache',
+        'json'  => 'Amber\Cache\Driver\JsonCache',
+        'array' => 'Amber\Cache\Driver\ArrayCache',
+        'apcu'  => 'Amber\Cache\Driver\ApcuCache',
     ];
 
     /**
@@ -28,7 +28,6 @@ class Cache
     {
         /* Checks if the use CacheInterface is already instantiated. */
         if (!self::$instance instanceof CacheInterface) {
-
             self::$instance = self::driver('file');
         }
 

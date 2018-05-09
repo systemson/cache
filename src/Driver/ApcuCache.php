@@ -17,7 +17,6 @@ class ApcuCache extends CacheDriver
     public function get($key, $default = null)
     {
         if (is_string($key)) {
-
             if ($this->has($key)) {
                 return apcu_fetch($key);
             }
@@ -42,7 +41,6 @@ class ApcuCache extends CacheDriver
     public function set($key, $value, $ttl = null)
     {
         if (is_string($key)) {
-
             return apcu_store($key, $value, $ttl * 60);
         }
 
@@ -61,7 +59,6 @@ class ApcuCache extends CacheDriver
     public function delete($key)
     {
         if (is_string($key)) {
-
             return apcu_delete($key);
         }
 
@@ -90,7 +87,7 @@ class ApcuCache extends CacheDriver
     public function has($key)
     {
         if (is_string($key)) {
-            return (boolean) apcu_exists($key);
+            return (bool) apcu_exists($key);
         }
 
         return false;
