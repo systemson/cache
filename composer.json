@@ -1,6 +1,6 @@
 {
     "name": "amber/cache",
-    "description": "Simple Filesystem Cache.",
+    "description": "Simple Cache.",
     "type": "library",
     "license": "GPL-3.0-or-later",
     "authors": [

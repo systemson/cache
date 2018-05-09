@@ -2,7 +2,7 @@
 
 namespace Amber\Cache\Tests;
 
-use Amber\Cache\JsonCache;
+use Amber\Cache\Driver\JsonCache;
 use Amber\Filesystem\Filesystem;
 use Carbon\Carbon;
 use PHPUnit\Framework\TestCase;

@@ -2,16 +2,14 @@
 
 namespace Amber\Cache\Tests;
 
-use Amber\Cache\Driver\FileCache;
-use Amber\Filesystem\Filesystem;
-use Carbon\Carbon;
+use Amber\Cache\Driver\ApcuCache;
 use PHPUnit\Framework\TestCase;
 
-class FileCacheTest extends TestCase
+class ApcuCacheTest extends TestCase
 {
-    public function testFileCache()
+    public function testApcuCache()
     {
-        $cache = new FileCache();
+        $cache = new ApcuCache();
         $key = 'key';
         $value = 'value';
 
@@ -21,22 +19,26 @@ class FileCacheTest extends TestCase
 
         /* Checks if the filecache is correctly instantiated */
         $this->assertInstanceOf(
-            FileCache::class,
+            ApcuCache::class,
             $cache
         );
 
         $this->assertTrue($cache->clear());
 
+        $this->assertFalse($cache->has(1));
         $this->assertFalse($cache->has($key));
 
+        $this->assertFalse($cache->set(1, $value));
         $this->assertTrue($cache->set($key, $value));
 
         $this->assertTrue($cache->has($key));
 
+        $this->assertFalse($cache->get(1), $value);
         $this->assertSame($cache->get($key), $value);
 
         $this->assertSame($cache->get('unkwonKey', 'default'), 'default');
 
+        $this->assertFalse($cache->delete(1));
         $this->assertTrue($cache->delete($key));
 
         $this->assertTrue($cache->setMultiple($multiple, 15));
@@ -44,11 +46,5 @@ class FileCacheTest extends TestCase
         $this->assertSame($cache->getMultiple(array_keys($multiple)), $multiple);
 
         $this->assertTrue($cache->deleteMultiple(array_keys($multiple)));
-
-        $content = Carbon::now()->subMinutes(15)."\r\n".serialize('value');
-
-        Filesystem::put('tmp/cache/'.sha1('other_key'), $content);
-
-        $this->assertTrue($cache->isExpired($cache->getCachedItem('other_key')));
     }
 }

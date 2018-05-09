@@ -2,8 +2,16 @@
 
 namespace Amber\Cache;
 
+use Amber\Cache\Driver\FileCache;
+use Psr\SimpleCache\CacheInterface;
+
 class Cache
 {
+    public $drivers = [
+        'file' => Amber\Cache\Driver\FileCache::class,
+        'json' => Amber\Cache\Driver\JsonCache::class,
+        'array' => Amber\Cache\Driver\ArrayCache::class,
+    ];
     /**
      * @var The instance of the cache driver
      */
@@ -14,16 +22,16 @@ class Cache
      */
     public static function getInstance()
     {
-        /* Checks if the CacheDriver is already instantiated. */
-        if (!self::$instance instanceof CacheDriver) {
-            /* Instantiate the CacheDriver */
-            self::$instance = $driver ?? new FileCache();
+        /* Checks if the use CacheInterface is already instantiated. */
+        if (!self::$instance instanceof CacheInterface) {
+
+            self::$instance = new FileCache();
         }
 
         return self::$instance;
     }
 
-    public static function driver(CacheDriver $driver)
+    public static function driver(CacheInterface $driver)
     {
         return self::$instance = $driver;
     }

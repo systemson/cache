@@ -2,7 +2,7 @@
 
 namespace Amber\Cache\Tests;
 
-use Amber\Cache\ArrayCache;
+use Amber\Cache\Driver\ArrayCache;
 use PHPUnit\Framework\TestCase;
 
 class ArrayCacheTest extends TestCase
@@ -25,6 +25,7 @@ class ArrayCacheTest extends TestCase
 
         $this->assertTrue($cache->clear());
 
+        $this->assertFalse($cache->has(1));
         $this->assertFalse($cache->has($key));
 
         $this->assertFalse($cache->set(1, $value));
