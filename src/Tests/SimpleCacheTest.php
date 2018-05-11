@@ -2,16 +2,16 @@
 
 namespace Amber\Cache\Tests;
 
-use Amber\Cache\Driver\FileCache;
+use Amber\Cache\Driver\SimpleCache;
 use Amber\Filesystem\Filesystem;
 use Carbon\Carbon;
 use PHPUnit\Framework\TestCase;
 
-class FileCacheTest extends TestCase
+class SimpleCacheTest extends TestCase
 {
     public function testFileCache()
     {
-        $cache = new FileCache();
+        $cache = new SimpleCache();
         $key = 'key';
         $value = 'value';
 
@@ -19,9 +19,8 @@ class FileCacheTest extends TestCase
             $multiple[$key.$x] = $value.$x;
         }
 
-        /* Checks if the filecache is correctly instantiated */
         $this->assertInstanceOf(
-            FileCache::class,
+            SimpleCache::class,
             $cache
         );
 

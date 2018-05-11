@@ -1,11 +1,12 @@
 <?php
 
-namespace Amber\Cache\Driver;
+namespace Amber\Cache\Driver\Base;
 
+use Amber\Cache\Driver\CacheDriver;
 use Amber\Filesystem\Filesystem;
 use Carbon\Carbon;
 
-class FileCache extends CacheDriver
+abstract class FileCache extends CacheDriver
 {
     /*
      * @var $path The base path to the cache folder.
@@ -31,21 +32,22 @@ class FileCache extends CacheDriver
      * @param string $key     The cache key.
      * @param mixed  $default Return value if the key does not exist.
      *
-     * @throws Amber\Cache\InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return mixed The cache value, or $default.
      */
-    public function get($key, $default = null)
+    protected function getRaw($key, $function = null)
     {
-        if (is_string($key)) {
-            $item = $this->getCachedItem($key);
+        /* If $key is not string throws \InvalidArgumentException */
+        $this->isString($key);
 
-            if ($item && !$this->isExpired($item)) {
-                return unserialize($item->value);
-            }
+        $item = $this->getCachedItem($key);
+
+        if ($item && !$this->isExpired($item)) {
+            return $function ? $function($item->value) : $item->value;
         }
 
-        return $default;
+        return null;
     }
 
     /**
@@ -59,11 +61,17 @@ class FileCache extends CacheDriver
      *
      * @return bool True on success and false on failure.
      */
-    public function set($key, $value, $ttl = null)
+    protected function setRaw($key, $value, $ttl = null)
     {
+        /* If $key is not string throws \InvalidArgumentException */
+        $this->isString($key);
+
+        /* If $key is not string throws \InvalidArgumentException */
+        $this->isString($value);
+
         $expiration = $ttl ? Carbon::now()->addMinutes($ttl) : null;
 
-        $content = $expiration."\r\n".serialize($value);
+        $content = $expiration."\r\n".$value;
 
         $this->filesystem->put($this->folder.'/'.sha1($key), $content);
 
@@ -81,6 +89,9 @@ class FileCache extends CacheDriver
      */
     public function delete($key)
     {
+        /* If $key is not string throws \InvalidArgumentException */
+        $this->isString($key);
+
         $this->filesystem->delete($this->folder.'/'.sha1($key));
 
         return true;
@@ -109,10 +120,11 @@ class FileCache extends CacheDriver
      */
     public function has($key)
     {
-        if (is_string($key)) {
-            if ($this->get($key)) {
-                return true;
-            }
+        /* If $key is not string throws \InvalidArgumentException */
+        $this->isString($key);
+
+        if ($this->getRaw($key)) {
+            return true;
         }
 
         return false;

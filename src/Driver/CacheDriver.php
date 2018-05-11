@@ -2,10 +2,13 @@
 
 namespace Amber\Cache\Driver;
 
+use Amber\Common\Validator;
 use Psr\SimpleCache\CacheInterface;
 
 abstract class CacheDriver implements CacheInterface
 {
+    use Validator;
+
     /**
      * Get multiple cache items.
      *

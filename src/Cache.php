@@ -15,7 +15,7 @@ class Cache
      * @var List of cache drivers.
      */
     protected static $drivers = [
-        'file'  => 'Amber\Cache\Driver\FileCache',
+        'file'  => 'Amber\Cache\Driver\SimpleCache',
         'json'  => 'Amber\Cache\Driver\JsonCache',
         'array' => 'Amber\Cache\Driver\ArrayCache',
         'apcu'  => 'Amber\Cache\Driver\ApcuCache',

@@ -4,9 +4,9 @@ namespace Amber\Cache\Driver;
 
 use Amber\Cache\Driver\Base\FileCache;
 
-class JsonCache extends FileCache
+class SimpleCache extends FileCache
 {
-       /**
+    /**
      * Get an item from the cache.
      *
      * @param string $key     The cache key.
@@ -18,7 +18,7 @@ class JsonCache extends FileCache
      */
     public function get($key, $default = null)
     {
-        return $this->getRaw($key) ?? json_encode($default);
+        return $this->getRaw($key, 'unserialize') ?? $default;
     }
 
     /**
@@ -34,6 +34,6 @@ class JsonCache extends FileCache
      */
     public function set($key, $value, $ttl = null)
     {
-        return $this->setRaw($key, json_encode($value), $ttl);
+        return $this->setRaw($key, serialize($value), $ttl);
     }
 }

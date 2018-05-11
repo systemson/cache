@@ -5,7 +5,7 @@ namespace Amber\Cache\Tests;
 use Amber\Cache\Cache;
 use Amber\Cache\Driver\ApcuCache;
 use Amber\Cache\Driver\ArrayCache;
-use Amber\Cache\Driver\FileCache;
+use Amber\Cache\Driver\SimpleCache;
 use Amber\Cache\Driver\JsonCache;
 use Amber\Cache\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -15,12 +15,12 @@ class CacheTest extends TestCase
     public function testCache()
     {
         $this->assertInstanceOf(
-            FileCache::class,
+            SimpleCache::class,
             Cache::getInstance()
         );
 
         $this->assertInstanceOf(
-            FileCache::class,
+            SimpleCache::class,
             Cache::driver('file')
         );
 
@@ -40,8 +40,8 @@ class CacheTest extends TestCase
         );
 
         $this->assertInstanceOf(
-            FileCache::class,
-            Cache::driver(FileCache::class)
+            SimpleCache::class,
+            Cache::driver(SimpleCache::class)
         );
 
         $this->assertFalse(Cache::has('key'));
