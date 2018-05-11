@@ -5,8 +5,8 @@ namespace Amber\Cache\Tests;
 use Amber\Cache\Cache;
 use Amber\Cache\Driver\ApcuCache;
 use Amber\Cache\Driver\ArrayCache;
-use Amber\Cache\Driver\SimpleCache;
 use Amber\Cache\Driver\JsonCache;
+use Amber\Cache\Driver\SimpleCache;
 use Amber\Cache\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 

@@ -46,8 +46,6 @@ abstract class FileCache extends CacheDriver
         if ($item && !$this->isExpired($item)) {
             return $function ? $function($item->value) : $item->value;
         }
-
-        return null;
     }
 
     /**
