@@ -6,7 +6,7 @@ use Amber\Cache\Driver\Base\FileCache;
 
 class JsonCache extends FileCache
 {
-       /**
+    /**
      * Get an item from the cache.
      *
      * @param string $key     The cache key.
