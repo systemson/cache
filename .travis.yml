@@ -3,7 +3,7 @@ language: php
 php:
   - 7.0
 
-before_install:
+before_install: echo "extension = apc.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 script:
   - composer install
