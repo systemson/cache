@@ -3,7 +3,9 @@ language: php
 php:
   - 7.0
 
-before_install: echo "extension = apc.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+before_install: 
+  - pear config-set preferred_state stable
+  - yes '' | pecl install apcu
 
 script:
   - composer install
