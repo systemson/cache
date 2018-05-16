@@ -2,29 +2,40 @@
 
 namespace Amber\Cache\Driver;
 
+use Amber\Cache\Exception\InvalidArgumentException;
+
 class ApcuCache extends CacheDriver
 {
+    public function __construct()
+    {
+        if(!extension_loaded('apcu') || !ini_get('apc.enabled')) {
+
+            Throw new \Exception('The PHP extension APCu is not enabled');
+        }
+    }
+
     /**
      * Get an item from the cache.
      *
      * @param string $key     The cache key.
      * @param mixed  $default Return value if the key does not exist.
      *
-     * @throws Amber\Cache\InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return mixed The cache value, or $default.
      */
     public function get($key, $default = null)
     {
-        if (is_string($key)) {
-            if ($this->has($key)) {
-                return apcu_fetch($key);
-            }
-
-            return $default;
+        /* If $key is not valid string throws InvalidArgumentException */
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        return false;
+        if ($this->has($key)) {
+            return apcu_fetch($key);
+        }
+
+        return $default;
     }
 
     /**
@@ -34,17 +45,18 @@ class ApcuCache extends CacheDriver
      * @param mixed     $value The value of the item to store.
      * @param null|int| $ttl   Optional. The TTL value of this item.
      *
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return bool True on success and false on failure.
      */
     public function set($key, $value, $ttl = null)
     {
-        if (is_string($key)) {
-            return apcu_store($key, $value, $ttl * 60);
+        /* If $key is not valid string throws InvalidArgumentException */
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        return false;
+        return apcu_store($key, $value, $ttl * 60);
     }
 
     /**
@@ -52,17 +64,18 @@ class ApcuCache extends CacheDriver
      *
      * @param string $key The unique cache key of the item to delete.
      *
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return bool True on success, false on error.
      */
     public function delete($key)
     {
-        if (is_string($key)) {
-            return apcu_delete($key);
+        /* If $key is not valid string throws InvalidArgumentException */
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        return false;
+        return apcu_delete($key);
     }
 
     /**
@@ -80,16 +93,17 @@ class ApcuCache extends CacheDriver
      *
      * @param string $key The cache item key.
      *
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return bool
      */
     public function has($key)
     {
-        if (is_string($key)) {
-            return (bool) apcu_exists($key);
+        /* If $key is not valid string throws InvalidArgumentException */
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        return false;
+        return (bool) apcu_exists($key);
     }
 }

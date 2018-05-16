@@ -2,6 +2,8 @@
 
 namespace Amber\Cache\Driver;
 
+use Amber\Cache\Exception\InvalidArgumentException;
+
 class ArrayCache extends CacheDriver
 {
     /*
@@ -21,11 +23,12 @@ class ArrayCache extends CacheDriver
      */
     public function get($key, $default = null)
     {
-        if (is_string($key)) {
-            return $this->cache[$key] ?? $default;
+        /* If $key is not valid string throws InvalidArgumentException */
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        return false;
+        return $this->cache[$key] ?? $default;
     }
 
     /**
@@ -41,13 +44,14 @@ class ArrayCache extends CacheDriver
      */
     public function set($key, $value, $ttl = null)
     {
-        if (is_string($key)) {
-            $this->cache[$key] = $value;
-
-            return true;
+        /* If $key is not valid string throws InvalidArgumentException */
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        return false;
+        $this->cache[$key] = $value;
+
+        return true;
     }
 
     /**
@@ -61,9 +65,12 @@ class ArrayCache extends CacheDriver
      */
     public function delete($key)
     {
-        if (is_string($key)) {
-            unset($this->cache[$key]);
+        /* If $key is not valid string throws InvalidArgumentException */
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Cache key must be not empty string');
         }
+
+        unset($this->cache[$key]);
 
         return true;
     }
@@ -91,10 +98,11 @@ class ArrayCache extends CacheDriver
      */
     public function has($key)
     {
-        if (is_string($key)) {
-            return isset($this->cache[$key]);
+        /* If $key is not valid string throws InvalidArgumentException */
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        return false;
+        return isset($this->cache[$key]);
     }
 }

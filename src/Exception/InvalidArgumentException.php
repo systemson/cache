@@ -1,6 +1,6 @@
 <?php
 
-namespace Amber\Cache;
+namespace Amber\Cache\Exception;
 
 use Psr\SimpleCache\InvalidArgumentException as InvalidArgumentExceptionInterface;
 

@@ -7,7 +7,7 @@ use Amber\Cache\Driver\ApcuCache;
 use Amber\Cache\Driver\ArrayCache;
 use Amber\Cache\Driver\JsonCache;
 use Amber\Cache\Driver\SimpleCache;
-use Amber\Cache\InvalidArgumentException;
+use Amber\Cache\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class CacheTest extends TestCase
@@ -34,10 +34,6 @@ class CacheTest extends TestCase
             Cache::driver('array')
         );
 
-        $this->assertInstanceOf(
-            ApcuCache::class,
-            Cache::driver('apcu')
-        );
 
         $this->assertInstanceOf(
             SimpleCache::class,
@@ -45,6 +41,22 @@ class CacheTest extends TestCase
         );
 
         $this->assertFalse(Cache::has('key'));
+
+        if(!extension_loaded('apcu') || !ini_get('apc.enabled')) {
+
+            $this->expectException(\Exception::class);
+
+            Cache::driver('apcu');
+
+            return;
+
+        } else {
+
+            $this->assertInstanceOf(
+                ApcuCache::class,
+                Cache::driver('apcu')
+            );
+        }
     }
 
     public function testException()

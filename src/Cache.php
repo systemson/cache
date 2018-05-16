@@ -2,6 +2,7 @@
 
 namespace Amber\Cache;
 
+use Amber\Cache\Exception\InvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
 
 class Cache

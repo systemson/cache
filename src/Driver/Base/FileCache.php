@@ -3,6 +3,7 @@
 namespace Amber\Cache\Driver\Base;
 
 use Amber\Cache\Driver\CacheDriver;
+use Amber\Cache\Exception\InvalidArgumentException;
 use Amber\Filesystem\Filesystem;
 use Carbon\Carbon;
 
@@ -32,20 +33,24 @@ abstract class FileCache extends CacheDriver
      * @param string $key     The cache key.
      * @param mixed  $default Return value if the key does not exist.
      *
-     * @throws \InvalidArgumentException
+     * @throws Amber\Cache\Exception\InvalidArgumentException
      *
      * @return mixed The cache value, or $default.
      */
     protected function getRaw($key, $function = null)
     {
-        /* If $key is not string throws \InvalidArgumentException */
-        $this->isString($key);
+        if (!$this->isString($key)) {;
+            /* If $key is not valid string throws InvalidArgumentException */
+            throw new InvalidArgumentException('Cache key must be not empty string');
+        }
 
         $item = $this->getCachedItem($key);
 
         if ($item && !$this->isExpired($item)) {
             return $function ? $function($item->value) : $item->value;
         }
+
+        return null;
     }
 
     /**
@@ -55,17 +60,21 @@ abstract class FileCache extends CacheDriver
      * @param mixed     $value The value of the item to store.
      * @param null|int| $ttl   Optional. The TTL value of this item.
      *
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws Amber\Cache\Exception\InvalidArgumentException
      *
      * @return bool True on success and false on failure.
      */
     protected function setRaw($key, $value, $ttl = null)
     {
-        /* If $key is not string throws \InvalidArgumentException */
-        $this->isString($key);
+        /* If $key is not valid string throws InvalidArgumentException */
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Cache key must be not empty string');
+        }
 
-        /* If $key is not string throws \InvalidArgumentException */
-        $this->isString($value);
+        /* If $value is not valid string throws \InvalidArgumentException */
+        if (!$this->isString($value)) {
+            throw new InvalidArgumentException('Cache value must be not empty string');
+        }
 
         $expiration = $ttl ? Carbon::now()->addMinutes($ttl) : null;
 
@@ -87,8 +96,10 @@ abstract class FileCache extends CacheDriver
      */
     public function delete($key)
     {
-        /* If $key is not string throws \InvalidArgumentException */
-        $this->isString($key);
+        /* If $key is not valid string throws InvalidArgumentException */
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Cache key must be not empty string');
+        }
 
         $this->filesystem->delete($this->folder.'/'.sha1($key));
 
@@ -118,8 +129,10 @@ abstract class FileCache extends CacheDriver
      */
     public function has($key)
     {
-        /* If $key is not string throws \InvalidArgumentException */
-        $this->isString($key);
+        /* If $key is not valid string throws InvalidArgumentException */
+        if (!$this->isString($key)) {
+            throw new InvalidArgumentException('Cache key must be not empty string');
+        }
 
         if ($this->getRaw($key)) {
             return true;
