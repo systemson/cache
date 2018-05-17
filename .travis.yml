@@ -3,9 +3,7 @@ language: php
 php:
   - 7.0
 
-before_install: 
-  - pear config-set preferred_state stable
-  - yes '' | pecl install apcu
+before_install:
 
 script:
   - composer install
