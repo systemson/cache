@@ -30,7 +30,7 @@ class ArrayCacheTest extends TestCase
         /* Clears the cache before testing */
         $this->assertTrue($cache->clear());
 
-        /* Checks for an unexistent key */ 
+        /* Checks for an unexistent key */
         $this->assertFalse($cache->has($key));
 
         /* Caches an item */

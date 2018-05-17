@@ -32,7 +32,7 @@ class JsonCacheTest extends TestCase
         /* Clears the cache before testing */
         $this->assertTrue($cache->clear());
 
-        /* Checks for an unexistent key */ 
+        /* Checks for an unexistent key */
         $this->assertFalse($cache->has($key));
 
         /* Caches an item */
@@ -55,7 +55,7 @@ class JsonCacheTest extends TestCase
         $this->assertTrue($cache->setMultiple($multiple, 15));
 
         /* Gets the array of items from cache */
-        $this->assertSame($cache->getMultiple(array_keys($multiple)),  array_map(
+        $this->assertSame($cache->getMultiple(array_keys($multiple)), array_map(
             function ($value) {
                 return json_encode($value);
             }, $multiple

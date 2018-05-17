@@ -39,7 +39,7 @@ abstract class FileCache extends CacheDriver
      */
     protected function getRaw($key, $function = null)
     {
-        if (!$this->isString($key)) {;
+        if (!$this->isString($key)) {
             /* If $key is not valid string throws InvalidArgumentException */
             throw new InvalidArgumentException('Cache key must be not empty string');
         }
@@ -49,8 +49,6 @@ abstract class FileCache extends CacheDriver
         if ($item && !$this->isExpired($item)) {
             return $function ? $function($item->value) : $item->value;
         }
-
-        return null;
     }
 
     /**

@@ -8,9 +8,8 @@ class ApcuCache extends CacheDriver
 {
     public function __construct()
     {
-        if(!extension_loaded('apcu') || !ini_get('apc.enabled')) {
-
-            Throw new \Exception('The PHP extension APCu is not enabled');
+        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
+            throw new \Exception('The PHP extension APCu is not enabled');
         }
     }
 

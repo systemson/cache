@@ -2,7 +2,6 @@
 
 namespace Amber\Cache\Tests;
 
-use Amber\Cache\Driver\Base\FileCache;
 use Amber\Cache\Driver\SimpleCache;
 use Amber\Cache\Exception\InvalidArgumentException;
 use Amber\Filesystem\Filesystem;
@@ -33,7 +32,7 @@ class SimpleCacheTest extends TestCase
         /* Clears the cache before testing */
         $this->assertTrue($cache->clear());
 
-        /* Checks for an unexistent key */ 
+        /* Checks for an unexistent key */
         $this->assertFalse($cache->has($key));
 
         /* Caches an item */
