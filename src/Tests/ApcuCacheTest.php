@@ -15,8 +15,6 @@ class ApcuCacheTest extends TestCase
             $this->expectException(\Exception::class);
 
             $cache = new ApcuCache();
-
-            return $cache;
         }
 
         $cache = new ApcuCache();
@@ -72,53 +70,61 @@ class ApcuCacheTest extends TestCase
         return $cache;
     }
 
-    /**
-     * @depends testApcuCache
-     */
-    public function testGetException($cache = null)
+    public function testGetException()
     {
-        if ($cache == null) {
-            return;
+        if(!extension_loaded('apcu') || !ini_get('apc.enabled')) {
+
+            $this->expectException(\Exception::class);
+
+            $cache = new ApcuCache();
         }
+
+        $cache = new ApcuCache();
 
         $this->expectException(InvalidArgumentException::class);
         $cache->get(1);
     }
 
-    /**
-     * @depends testApcuCache
-     */
-    public function testSetException($cache = null)
+    public function testSetException()
     {
-        if ($cache == null) {
-            return;
+        if(!extension_loaded('apcu') || !ini_get('apc.enabled')) {
+
+            $this->expectException(\Exception::class);
+
+            $cache = new ApcuCache();
         }
+
+        $cache = new ApcuCache();
 
         $this->expectException(InvalidArgumentException::class);
         $cache->set(1, 'value');
     }
 
-    /**
-     * @depends testApcuCache
-     */
-    public function testHastException($cache = null)
+    public function testHastException()
     {
-        if ($cache == null) {
-            return;
+        if(!extension_loaded('apcu') || !ini_get('apc.enabled')) {
+
+            $this->expectException(\Exception::class);
+
+            $cache = new ApcuCache();
         }
+
+        $cache = new ApcuCache();
 
         $this->expectException(InvalidArgumentException::class);
         $cache->has(1);
     }
 
-    /**
-     * @depends testApcuCache
-     */
-    public function testDeleteException($cache = null)
+    public function testDeleteException()
     {
-        if ($cache == null) {
-            return;
+        if(!extension_loaded('apcu') || !ini_get('apc.enabled')) {
+
+            $this->expectException(\Exception::class);
+
+            $cache = new ApcuCache();
         }
+
+        $cache = new ApcuCache();
 
         $this->expectException(InvalidArgumentException::class);
         $cache->delete(1);
