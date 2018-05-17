@@ -32,6 +32,6 @@
         "phpunit/phpunit": "^6.5"
     },
     "scripts": {
-        "test": "phpunit --coverage-html ./tmp/coverage/"
+        "test": "phpunit --verbose --coverage-html ./tmp/coverage/"
     }
 }
