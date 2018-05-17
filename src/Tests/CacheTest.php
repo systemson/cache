@@ -34,7 +34,6 @@ class CacheTest extends TestCase
             Cache::driver('array')
         );
 
-
         $this->assertInstanceOf(
             SimpleCache::class,
             Cache::driver(SimpleCache::class)
@@ -42,16 +41,13 @@ class CacheTest extends TestCase
 
         $this->assertFalse(Cache::has('key'));
 
-        if(!extension_loaded('apcu') || !ini_get('apc.enabled')) {
-
+        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
             $this->expectException(\Exception::class);
 
             Cache::driver('apcu');
 
             return;
-
         } else {
-
             $this->assertInstanceOf(
                 ApcuCache::class,
                 Cache::driver('apcu')

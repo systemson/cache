@@ -10,8 +10,7 @@ class ApcuCacheTest extends TestCase
 {
     public function testApcuCache()
     {
-        if(!extension_loaded('apcu') || !ini_get('apc.enabled')) {
-
+        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
             $this->expectException(\Exception::class);
 
             $cache = new ApcuCache();
@@ -36,7 +35,7 @@ class ApcuCacheTest extends TestCase
         /* Clears the cache before testing */
         $this->assertTrue($cache->clear());
 
-        /* Checks for an unexistent key */ 
+        /* Checks for an unexistent key */
         $this->assertFalse($cache->has($key));
 
         /* Caches an item */
@@ -72,8 +71,7 @@ class ApcuCacheTest extends TestCase
 
     public function testGetException()
     {
-        if(!extension_loaded('apcu') || !ini_get('apc.enabled')) {
-
+        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
             $this->expectException(\Exception::class);
 
             $cache = new ApcuCache();
@@ -87,8 +85,7 @@ class ApcuCacheTest extends TestCase
 
     public function testSetException()
     {
-        if(!extension_loaded('apcu') || !ini_get('apc.enabled')) {
-
+        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
             $this->expectException(\Exception::class);
 
             $cache = new ApcuCache();
@@ -102,8 +99,7 @@ class ApcuCacheTest extends TestCase
 
     public function testHastException()
     {
-        if(!extension_loaded('apcu') || !ini_get('apc.enabled')) {
-
+        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
             $this->expectException(\Exception::class);
 
             $cache = new ApcuCache();
@@ -117,8 +113,7 @@ class ApcuCacheTest extends TestCase
 
     public function testDeleteException()
     {
-        if(!extension_loaded('apcu') || !ini_get('apc.enabled')) {
-
+        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
             $this->expectException(\Exception::class);
 
             $cache = new ApcuCache();
