@@ -2,7 +2,7 @@
 
 namespace Amber\Cache\Driver;
 
-use Amber\Common\Validator;
+use Amber\Validator\Validator;
 use Psr\SimpleCache\CacheInterface;
 
 abstract class CacheDriver implements CacheInterface
