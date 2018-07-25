@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/systemson/Cache.svg?branch=master)](https://travis-ci.org/systemson/Cache)
+[![Build Status](https://travis-ci.org/systemson/cache.svg?branch=master)](https://travis-ci.org/systemson/cache)
 [![StyleCI](https://styleci.io/repos/126605518/shield?branch=master)](https://styleci.io/repos/126605518)
 
 # Amber/Cache
