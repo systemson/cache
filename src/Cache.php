@@ -38,8 +38,10 @@ class Cache
     public static function driver($driver)
     {
         if (isset(self::$drivers[$driver])) {
-            return self::$instance = new self::$drivers[$driver]();
-        } elseif (class_exists($driver)) {
+            $driver = self::$drivers[$driver];
+        }
+
+        if (class_exists($driver)) {
             return self::$instance = new $driver();
         }
 

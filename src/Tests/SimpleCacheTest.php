@@ -20,7 +20,7 @@ class SimpleCacheTest extends TestCase
         $value = 'value';
 
         for ($x = 0; $x < 3; $x++) {
-            $multiple[$key.$x] = $value.$x;
+            $multiple[$key . $x] = $value . $x;
         }
 
         /* Checks thay the driver is correctly instantiated */
@@ -61,10 +61,10 @@ class SimpleCacheTest extends TestCase
         $this->assertTrue($cache->deleteMultiple(array_keys($multiple)));
 
         /* Sets the content for a expired cache item */
-        $content = Carbon::now()->subMinutes(15)."\r\n".serialize('value');
+        $content = Carbon::now()->subMinutes(15) . "\r\n" . serialize('value');
 
         /* Writes the expired item into the cache filesystem */
-        Filesystem::put('tmp/cache/'.sha1('other_key'), $content);
+        Filesystem::put('tmp/cache/' . sha1('other_key'), $content);
 
         /* Validates that the item is expired */
         $this->assertTrue($cache->isExpired($cache->getCachedItem('other_key')));

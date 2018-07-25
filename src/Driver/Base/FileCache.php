@@ -76,9 +76,9 @@ abstract class FileCache extends CacheDriver
 
         $expiration = $ttl ? Carbon::now()->addMinutes($ttl) : null;
 
-        $content = $expiration."\r\n".$value;
+        $content = $expiration . "\r\n" . $value;
 
-        $this->filesystem->put($this->folder.'/'.sha1($key), $content);
+        $this->filesystem->put($this->folder . '/' . sha1($key), $content);
 
         return true;
     }
@@ -99,7 +99,7 @@ abstract class FileCache extends CacheDriver
             throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        $this->filesystem->delete($this->folder.'/'.sha1($key));
+        $this->filesystem->delete($this->folder . '/' . sha1($key));
 
         return true;
     }
@@ -141,8 +141,8 @@ abstract class FileCache extends CacheDriver
 
     public function getCachedItem($key)
     {
-        if ($this->filesystem->has($this->folder.'/'.sha1($key))) {
-            $item = explode("\r\n", $this->filesystem->read($this->folder.'/'.sha1($key)));
+        if ($this->filesystem->has($this->folder . '/' . sha1($key))) {
+            $item = explode("\r\n", $this->filesystem->read($this->folder . '/' . sha1($key)));
 
             return (object) [
                 'key'    => $key,

@@ -18,7 +18,7 @@ class ArrayCacheTest extends TestCase
         $value = 'value';
 
         for ($x = 0; $x < 3; $x++) {
-            $multiple[$key.$x] = $value.$x;
+            $multiple[$key . $x] = $value . $x;
         }
 
         /* Checks thay the driver is correctly instantiated */
