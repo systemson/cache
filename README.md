@@ -26,9 +26,9 @@ Alternatively you can set the driver before geting the instance of the cache.
 ```php
 use Amber\Cache\Cache;
 
-$cache = Cache::driver('file')->getInstance();
+$cache = Cache::withDriver('file');
 ```
-You can choose from these drivers
+You can choose from these drivers:
 ```php
 $drivers = [
     'file'  => 'Amber\Cache\Driver\SimpleCache',
@@ -38,16 +38,15 @@ $drivers = [
 ];
 ```
 
-Or you could set the driver class for youself
+Or you could set the driver class:
 ```php
-$cache = Cache::driver(Amber\Cache\Driver\SimpleCache::class)->getInstance();
+$cache = Cache::withDriver(Amber\Cache\Driver\SimpleCache::class);
 ```
 
 Finally you could instantiate the driver by yourself:
 ```php
 $cache = new \Amber\Cache\Driver\SimpleCache();
 ```
-
 
 ### get()
 Fetches a value from the cache.
@@ -99,7 +98,7 @@ Deletes multiple cache items in a single operation.
 $cache->deleteMultiple($keys);
 ```
 
-## Statically
+### Static Usage
 You can use all the method from the Cache class statically, like this:
 ```php
 use Amber\Cache\Cache;
@@ -111,5 +110,8 @@ Cache::has('key'); // Returns true
 Cache::get('key'); // Returns "value"
 
 Cache::delete('key');
+
+// Set the driver and then call the desired method.
+Cache::driver('json')->set('key', 'value');
 
 ```
