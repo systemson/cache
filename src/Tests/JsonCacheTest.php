@@ -19,9 +19,25 @@ class JsonCacheTest extends TestCase
         $key = 'key';
         $value = 'value';
 
+        $string = 'string';
+        $integer = 1;
+        $float = 1.1;
+        $array = [1,2,3,4,5];
+
+        $object = new \stdClass();
+        $object->string = 'string';
+        $object->integer = $integer;
+        $object->array = $array;
+
         for ($x = 0; $x < 3; $x++) {
             $multiple[$key . $x] = $value . $x;
         }
+
+        $multiple['string'] = $string;
+        $multiple['integer'] = $integer;
+        $multiple['float'] = $float;
+        $multiple['array'] = $array;
+        $multiple['object'] = $object;
 
         /* Checks thay the driver is correctly instantiated */
         $this->assertInstanceOf(
@@ -61,6 +77,25 @@ class JsonCacheTest extends TestCase
             },
             $multiple
         ));
+
+        /* Tests single actions from a setMultiple */
+        $this->assertTrue($cache->has('string'));
+        $this->assertTrue($cache->has('integer'));
+        $this->assertTrue($cache->has('float'));
+        $this->assertTrue($cache->has('array'));
+        $this->assertTrue($cache->has('object'));
+
+        $this->assertEquals($cache->get('string'), json_encode($string));
+        $this->assertEquals($cache->get('integer'), json_encode($integer));
+        $this->assertEquals($cache->get('float'), json_encode($float));
+        $this->assertEquals($cache->get('array'), json_encode($array));
+        $this->assertEquals($cache->get('object'), json_encode($object));
+
+        $this->assertTrue($cache->delete('string'));
+        $this->assertTrue($cache->delete('integer'));
+        $this->assertTrue($cache->delete('float'));
+        $this->assertTrue($cache->delete('array'));
+        $this->assertTrue($cache->delete('object'));
 
         /* Deletes the array of items from cache */
         $this->assertTrue($cache->deleteMultiple(array_keys($multiple)));

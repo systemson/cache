@@ -34,6 +34,6 @@ class JsonCache extends FileCache
      */
     public function set($key, $value, $ttl = null)
     {
-        return $this->setRaw($key, json_encode($value), $ttl);
+        return $this->setRaw('json_encode', $key, $value, $ttl);
     }
 }

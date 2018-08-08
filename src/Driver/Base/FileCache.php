@@ -62,21 +62,16 @@ abstract class FileCache extends CacheDriver
      *
      * @return bool True on success and false on failure.
      */
-    protected function setRaw($key, $value, $ttl = null)
+    protected function setRaw($function, $key, $value, $ttl = null)
     {
         /* If $key is not valid string throws InvalidArgumentException */
         if (!$this->isString($key)) {
             throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        /* If $value is not valid string throws \InvalidArgumentException */
-        if (!$this->isString($value)) {
-            throw new InvalidArgumentException('Cache value must be not empty string');
-        }
-
         $expiration = $ttl ? Carbon::now()->addMinutes($ttl) : null;
 
-        $content = $expiration . "\r\n" . $value;
+        $content = $expiration . "\r\n" . $function($value);
 
         $this->filesystem->put($this->folder . '/' . sha1($key), $content);
 
@@ -90,7 +85,7 @@ abstract class FileCache extends CacheDriver
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
      *
-     * @return bool True on success, false on error.
+     * @return bool True on success, false on fail.
      */
     public function delete($key)
     {
@@ -99,9 +94,13 @@ abstract class FileCache extends CacheDriver
             throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        $this->filesystem->delete($this->folder . '/' . sha1($key));
+        $path = $this->folder . '/' . sha1($key);
 
-        return true;
+        if ($this->filesystem->has($path)) {
+            $this->filesystem->delete($path);
+            return true;
+        }
+        return false;
     }
 
     /**

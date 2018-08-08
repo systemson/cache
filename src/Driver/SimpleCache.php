@@ -34,6 +34,6 @@ class SimpleCache extends FileCache
      */
     public function set($key, $value, $ttl = null)
     {
-        return $this->setRaw($key, serialize($value), $ttl);
+        return $this->setRaw('serialize', $key, $value, $ttl);
     }
 }
