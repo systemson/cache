@@ -26,7 +26,7 @@ Alternatively you can set the driver before geting the instance of the cache.
 ```php
 use Amber\Cache\Cache;
 
-$cache = Cache::withDriver('file');
+$cache = Cache::driver('file');
 ```
 You can choose from these drivers:
 ```php
@@ -40,7 +40,7 @@ $drivers = [
 
 Or you could set the driver class:
 ```php
-$cache = Cache::withDriver(Amber\Cache\Driver\SimpleCache::class);
+$cache = Cache::driver(Amber\Cache\Driver\SimpleCache::class);
 ```
 
 Finally you could instantiate the driver by yourself:
