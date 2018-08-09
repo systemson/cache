@@ -6,15 +6,20 @@ use Amber\Cache\Driver\CacheDriver;
 use Amber\Cache\Exception\InvalidArgumentException;
 use Amber\Filesystem\Filesystem;
 use Carbon\Carbon;
+use Psr\Cache\CacheItemInterface;
 
 abstract class FileCache extends CacheDriver
 {
-    /*
+    /**
+     * @todo Should be removed in favor of a value from the ConfigAware.
+     *
      * @var $path The base path to the cache folder.
      */
     public $folder = '/tmp/cache';
 
-    /*
+    /**
+     * @todo Should be removed in favor of a value from the ConfigAware.
+     *
      * @var $filesystem The file system instance.
      */
     public $filesystem;
@@ -35,7 +40,7 @@ abstract class FileCache extends CacheDriver
      *
      * @throws Amber\Cache\Exception\InvalidArgumentException
      *
-     * @return mixed The cache value, or $default.
+     * @return mixed|void The cache value, or void.
      */
     protected function getRaw($key, $function = null)
     {
@@ -47,16 +52,17 @@ abstract class FileCache extends CacheDriver
         $item = $this->getCachedItem($key);
 
         if ($item && !$this->isExpired($item)) {
-            return $function ? $function($item->value) : $item->value;
+            return $function ? $function($item->get()) : $item->get();
         }
     }
 
     /**
      * Store the cache item in the file system.
      *
-     * @param string    $key   The key of the cache item.
-     * @param mixed     $value The value of the item to store.
-     * @param null|int| $ttl   Optional. The TTL value of this item.
+     * @param callable  $function The callable to apply to the item's value.
+     * @param string    $key      The key of the cache item.
+     * @param mixed     $value    The value of the item to store.
+     * @param null|int| $ttl      Optional. The TTL value of this item.
      *
      * @throws Amber\Cache\Exception\InvalidArgumentException
      *
@@ -116,7 +122,7 @@ abstract class FileCache extends CacheDriver
     }
 
     /**
-     * Determines whether an item is present in the cache.
+     * Whether an item is present in the cache.
      *
      * @param string $key The cache item key.
      *
@@ -138,23 +144,35 @@ abstract class FileCache extends CacheDriver
         return false;
     }
 
+    /**
+     * Returns a CacheItemClass for the.
+     *
+     * @param string $key The cache item key.
+     *
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     *
+     * @return CacheItemInterface
+     */
     public function getCachedItem($key)
     {
         if ($this->filesystem->has($this->folder . '/' . sha1($key))) {
-            $item = explode("\r\n", $this->filesystem->read($this->folder . '/' . sha1($key)));
+            $item = explode("\r\n", $this->filesystem->read($this->folder . '/' . sha1($key)), 2);
 
-            return (object) [
-                'key'    => $key,
-                'expire' => $item[0] ?? null,
-                'value'  => $item[1] ?? null,
-            ];
+            return new CacheItemClass($key, $item[1] ?? null, $item[0] ?? null);
         }
     }
 
-    public function isExpired($item)
+    /**
+     * Whether an item from the cache is expired. If it does, deletes it from the file system.
+     *
+     * @param CacheItemInterface $item The item to evaluate.
+     *
+     * @return 
+     */
+    public function isExpired(CacheItemInterface $item)
     {
-        if ($item->expire && $item->expire <= Carbon::now()) {
-            $this->delete($item->key);
+        if ($item->isExpired()) {
+            $this->delete($item->getKey());
 
             return true;
         }
