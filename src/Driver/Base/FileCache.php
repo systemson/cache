@@ -167,7 +167,7 @@ abstract class FileCache extends CacheDriver
      *
      * @param CacheItemInterface $item The item to evaluate.
      *
-     * @return 
+     * @return
      */
     public function isExpired(CacheItemInterface $item)
     {
