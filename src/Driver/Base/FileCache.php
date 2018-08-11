@@ -10,33 +10,16 @@ use Psr\Cache\CacheItemInterface;
 
 abstract class FileCache extends CacheDriver
 {
-    /**
-     * @todo Should be removed in favor of a value from the ConfigAware.
-     *
-     * @var $path The base path to the cache folder.
-     */
-    public $folder = '/tmp/cache';
-
-    /**
-     * @todo Should be removed in favor of a value from the ConfigAware.
-     *
-     * @var $filesystem The file system instance.
-     */
-    public $filesystem;
-
-    /**
-     * @param string $path The base path to the cache folder.
-     */
-    public function __construct($path = null)
+    public function filesystem()
     {
-        $this->filesystem = Filesystem::getInstance($path ?? getcwd());
+        return Filesystem::getInstance($this->getBasePathConfig());
     }
 
     /**
      * Get an item from the cache.
      *
-     * @param string $key     The cache key.
-     * @param mixed  $default Return value if the key does not exist.
+     * @param string $key      The cache key.
+     * @param mixed  $function Return value if the key does not exist.
      *
      * @throws Amber\Cache\Exception\InvalidArgumentException
      *
@@ -79,7 +62,7 @@ abstract class FileCache extends CacheDriver
 
         $content = $expiration . "\r\n" . $function($value);
 
-        $this->filesystem->put($this->folder . '/' . sha1($key), $content);
+        $this->filesystem()->put($this->getBaseFolderConfig() . '/' . sha1($key), $content);
 
         return true;
     }
@@ -100,10 +83,10 @@ abstract class FileCache extends CacheDriver
             throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        $path = $this->folder . '/' . sha1($key);
+        $path = $this->getBaseFolderConfig() . '/' . sha1($key);
 
-        if ($this->filesystem->has($path)) {
-            $this->filesystem->delete($path);
+        if ($this->filesystem()->has($path)) {
+            $this->filesystem()->delete($path);
             return true;
         }
         return false;
@@ -116,7 +99,7 @@ abstract class FileCache extends CacheDriver
      */
     public function clear()
     {
-        $this->filesystem->deleteDir($this->folder);
+        $this->filesystem()->deleteDir($this->getBaseFolderConfig());
 
         return true;
     }
@@ -155,8 +138,8 @@ abstract class FileCache extends CacheDriver
      */
     public function getCachedItem($key)
     {
-        if ($this->filesystem->has($this->folder . '/' . sha1($key))) {
-            $item = explode("\r\n", $this->filesystem->read($this->folder . '/' . sha1($key)), 2);
+        if ($this->filesystem()->has($this->getBaseFolderConfig() . '/' . sha1($key))) {
+            $item = explode("\r\n", $this->filesystem()->read($this->getBaseFolderConfig() . '/' . sha1($key)), 2);
 
             return new CacheItemClass($key, $item[1] ?? null, $item[0] ?? null);
         }

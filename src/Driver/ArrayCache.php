@@ -6,8 +6,8 @@ use Amber\Cache\Exception\InvalidArgumentException;
 
 class ArrayCache extends CacheDriver
 {
-    /*
-     * @var $cache The array containing the cached items.
+    /**
+     * @var The array containing the cached items.
      */
     public $cache;
 

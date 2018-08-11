@@ -74,7 +74,7 @@ class ApcuCacheTest extends TestCase
         $this->assertTrue($cache->setMultiple($multiple, 15));
 
         /* Gets the array of items */
-        $this->assertSame($cache->getMultiple(array_keys($multiple)), $multiple);
+        $this->assertEquals($cache->getMultiple(array_keys($multiple)), $multiple);
 
         /* Tests single actions from a setMultiple */
         $this->assertTrue($cache->has('string'));

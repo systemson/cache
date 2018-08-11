@@ -6,6 +6,9 @@ use Amber\Cache\Exception\InvalidArgumentException;
 
 class ApcuCache extends CacheDriver
 {
+    /**
+     * Checks if APCu is enabled otherwise throws an Exception.
+     */
     public function __construct()
     {
         if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {

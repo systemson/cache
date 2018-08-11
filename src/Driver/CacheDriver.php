@@ -12,7 +12,17 @@ abstract class CacheDriver implements CacheInterface, ConfigAwareInterface
     use Validator, ConfigAware;
 
     /**
-     * Get multiple cache items.
+     * Instantiates the Cache Driver.
+     *
+     * @param string $config The config environment variables.
+     */
+    public function __construct($config = [])
+    {
+        $this->setConfig($config);
+    }
+
+    /**
+     * Gets multiple cached items.
      *
      * @param array $keys    A list of cache keys.
      * @param mixed $default Default value for keys that do not exist.
@@ -31,10 +41,10 @@ abstract class CacheDriver implements CacheInterface, ConfigAwareInterface
     }
 
     /**
-     * Store a set of key => value pairs in the file system.
+     * Stores a set of key => value pairs in the file system.
      *
-     * @param array    $values A list of key => value pairs of items to store.
-     * @param null|int $ttl    Optional. The TTL value of this item.
+     * @param array    $items A list of key => value pairs of items to store.
+     * @param null|int $ttl   Optional. The TTL value of this item.
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
      *

@@ -13,6 +13,11 @@ class Cache
     protected static $instance;
 
     /**
+     * @var The instance of the cache driver
+     */
+    protected static $config = [];
+
+    /**
      * @var List of cache drivers.
      */
     protected static $drivers = [
@@ -33,6 +38,35 @@ class Cache
         }
 
         return self::$instance;
+    }
+
+    /**
+     * Sets the config for the current Cache driver.
+     *
+     * @param array $config An associative array of the config environment variables.
+     *
+     * @return CacheInterface An instance of the Cache driver.
+     */
+    public function config($config)
+    {
+        /* Checks if the CacheInterface is already instantiated. */
+        if (!self::$instance instanceof CacheInterface) {
+            self::getInstance();
+        }
+
+        self::$instance->setConfig($config);
+
+        return self::$instance;
+    }
+
+    /**
+     * Resets the cache to default driver.
+     *
+     * @return CacheInterface An instance of the Cache driver.
+     */
+    public function reset()
+    {
+        return self::$instance = null;
     }
 
     /**

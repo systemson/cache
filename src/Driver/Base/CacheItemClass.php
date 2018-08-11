@@ -30,13 +30,15 @@ class CacheItemClass implements CacheItemInterface
      * @var The item's time to live.
      */
     protected $ttl;
-  
+
     /**
+     * Instantiates a new Cache Item.
+     *
      * @param string $key The Cache's key.
      * @param mixed $value The Cache's value.
      * @param mixed $ttl The Cache's time to live in minutes.
      */
-    public function __construct($key, $value, $ttl = 0)
+    public function __construct($key, $value, $ttl = null)
     {
         $this->key = $key;
         $this->set($value);

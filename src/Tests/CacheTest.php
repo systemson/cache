@@ -55,6 +55,27 @@ class CacheTest extends TestCase
         }
     }
 
+    public function testCacheConfig()
+    {
+
+        $config = [
+            'key1' => 'value1',
+            'key2' => 'value2',
+        ];
+
+        $this->assertNull(Cache::reset());
+
+        $this->assertInstanceOf(
+            SimpleCache::class,
+            Cache::config($config)
+        );
+
+        $this->assertInstanceOf(
+            SimpleCache::class,
+            Cache::config($config)
+        );
+    }
+
     public function testException()
     {
         $this->expectException(InvalidArgumentException::class);
