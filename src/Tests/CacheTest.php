@@ -57,7 +57,6 @@ class CacheTest extends TestCase
 
     public function testCacheConfig()
     {
-
         $config = [
             'key1' => 'value1',
             'key2' => 'value2',
