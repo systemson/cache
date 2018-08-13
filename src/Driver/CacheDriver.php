@@ -2,14 +2,14 @@
 
 namespace Amber\Cache\Driver;
 
-use Amber\Cache\Config\ConfigAware;
 use Amber\Cache\Config\ConfigAwareInterface;
+use Amber\Cache\Config\ConfigAwareTrait;
 use Amber\Validator\Validator;
 use Psr\SimpleCache\CacheInterface;
 
 abstract class CacheDriver implements CacheInterface, ConfigAwareInterface
 {
-    use Validator, ConfigAware;
+    use Validator, ConfigAwareTrait;
 
     /**
      * Instantiates the Cache Driver.

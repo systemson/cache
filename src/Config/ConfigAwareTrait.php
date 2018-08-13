@@ -2,9 +2,9 @@
 
 namespace Amber\Cache\Config;
 
-use Amber\Config\ConfigAware as BaseConfig;
+use Amber\Config\ConfigAwareTrait as BaseConfig;
 
-trait ConfigAware
+trait ConfigAwareTrait
 {
     use BaseConfig;
 
