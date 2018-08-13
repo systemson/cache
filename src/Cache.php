@@ -47,7 +47,7 @@ class Cache
      *
      * @return CacheInterface An instance of the Cache driver.
      */
-    public function config($config)
+    public static function config($config)
     {
         /* Checks if the CacheInterface is already instantiated. */
         if (!self::$instance instanceof CacheInterface) {
@@ -64,7 +64,7 @@ class Cache
      *
      * @return CacheInterface An instance of the Cache driver.
      */
-    public function reset()
+    public static function reset()
     {
         return self::$instance = null;
     }
