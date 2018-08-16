@@ -1,6 +1,6 @@
 <?php
 
-namespace Amber\Cache\Tests;
+namespace Tests;
 
 use Amber\Cache\Cache;
 use Amber\Cache\Driver\ApcuCache;

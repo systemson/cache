@@ -1,19 +1,19 @@
 <?php
 
-namespace Amber\Cache\Tests;
+namespace Tests;
 
-use Amber\Cache\Driver\JsonCache;
+use Amber\Cache\Driver\SimpleCache;
 use Amber\Cache\Exception\InvalidArgumentException;
 use Amber\Filesystem\Filesystem;
 use Carbon\Carbon;
 use PHPUnit\Framework\TestCase;
 
-class JsonCacheTest extends TestCase
+class SimpleCacheTest extends TestCase
 {
-    public function testJsonCache()
+    public function testFileCache()
     {
         /* Instantiates the Cache driver */
-        $cache = new JsonCache();
+        $cache = new SimpleCache();
 
         /* Sets the vars to test */
         $key = 'key';
@@ -41,7 +41,7 @@ class JsonCacheTest extends TestCase
 
         /* Checks thay the driver is correctly instantiated */
         $this->assertInstanceOf(
-            JsonCache::class,
+            SimpleCache::class,
             $cache
         );
 
@@ -58,11 +58,11 @@ class JsonCacheTest extends TestCase
         $this->assertTrue($cache->has($key));
 
         /* Gets the item from cache */
-        $this->assertSame($cache->get($key), json_encode($value));
+        $this->assertSame($cache->get($key), $value);
 
         /* Checks for an inexistent key adding a default param */
         /* Must return the default value */
-        $this->assertSame($cache->get('unkwonKey', 'default'), json_encode('default'));
+        $this->assertSame($cache->get('unkwonKey', 'default'), 'default');
 
         /* Deletes the item from cache */
         $this->assertTrue($cache->delete($key));
@@ -70,13 +70,8 @@ class JsonCacheTest extends TestCase
         /* Caches an array of items */
         $this->assertTrue($cache->setMultiple($multiple, 15));
 
-        /* Gets the array of items from cache */
-        $this->assertSame($cache->getMultiple(array_keys($multiple)), array_map(
-            function ($value) {
-                return json_encode($value);
-            },
-            $multiple
-        ));
+        /* Gets the array of items */
+        $this->assertEquals($cache->getMultiple(array_keys($multiple)), $multiple);
 
         /* Tests single actions from a setMultiple */
         $this->assertTrue($cache->has('string'));
@@ -85,11 +80,11 @@ class JsonCacheTest extends TestCase
         $this->assertTrue($cache->has('array'));
         $this->assertTrue($cache->has('object'));
 
-        $this->assertEquals($cache->get('string'), json_encode($string));
-        $this->assertEquals($cache->get('integer'), json_encode($integer));
-        $this->assertEquals($cache->get('float'), json_encode($float));
-        $this->assertEquals($cache->get('array'), json_encode($array));
-        $this->assertEquals($cache->get('object'), json_encode($object));
+        $this->assertEquals($cache->get('string'), $string);
+        $this->assertEquals($cache->get('integer'), $integer);
+        $this->assertEquals($cache->get('float'), $float);
+        $this->assertEquals($cache->get('array'), $array);
+        $this->assertEquals($cache->get('object'), $object);
 
         $this->assertTrue($cache->delete('string'));
         $this->assertTrue($cache->delete('integer'));
@@ -97,11 +92,11 @@ class JsonCacheTest extends TestCase
         $this->assertTrue($cache->delete('array'));
         $this->assertTrue($cache->delete('object'));
 
-        /* Deletes the array of items from cache */
+        /* Deletes the array of items from the cache */
         $this->assertTrue($cache->deleteMultiple(array_keys($multiple)));
 
-        /* Sest the content for a expired cache item */
-        $content = Carbon::now()->subMinutes(15) . "\r\n" . json_encode('value');
+        /* Sets the content for a expired cache item */
+        $content = Carbon::now()->subMinutes(15) . "\r\n" . serialize('value');
 
         /* Writes the expired item into the cache filesystem */
         Filesystem::put('tmp/cache/' . sha1('other_key'), $content);
@@ -116,7 +111,7 @@ class JsonCacheTest extends TestCase
     }
 
     /**
-     * @depends testJsonCache
+     * @depends testFileCache
      */
     public function testGetException($cache)
     {
@@ -125,7 +120,7 @@ class JsonCacheTest extends TestCase
     }
 
     /**
-     * @depends testJsonCache
+     * @depends testFileCache
      */
     public function testSetException($cache)
     {
@@ -134,7 +129,7 @@ class JsonCacheTest extends TestCase
     }
 
     /**
-     * @depends testJsonCache
+     * @depends testFileCache
      */
     public function testHastException($cache)
     {
@@ -143,7 +138,7 @@ class JsonCacheTest extends TestCase
     }
 
     /**
-     * @depends testJsonCache
+     * @depends testFileCache
      */
     public function testDeleteException($cache)
     {
