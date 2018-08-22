@@ -5,7 +5,7 @@ require_once 'vendor/autoload.php';
 use Amber\Cache\Cache;
 use Lavoiesl\PhpBenchmark\Benchmark;
 
-        /* Sets the vars to test */
+/* Sets the vars to test */
         $key = 'key';
         $value = 'value';
 
@@ -41,7 +41,6 @@ $data = [
 ];
 
 $function = function ($cache) use ($data) {
-
     extract($data);
 
     /* Clears the cache before testing */
@@ -99,26 +98,26 @@ $function = function ($cache) use ($data) {
 
 $benchmark = new Benchmark();
 
-$benchmark->add('array',  function() use ($function) {
+$benchmark->add('array', function () use ($function) {
     $cache = Cache::driver('array');
 
     $function($cache);
 });
 
-$benchmark->add('file',   function() use ($function) {
+$benchmark->add('file', function () use ($function) {
     $cache = Cache::driver('file');
 
     $function($cache);
 });
 
-$benchmark->add('apcu',   function() use ($function) {
+$benchmark->add('apcu', function () use ($function) {
     $cache = Cache::driver('apcu');
 
     $function($cache);
 });
 
 
-$benchmark->add('json',   function() use ($function) {
+$benchmark->add('json', function () use ($function) {
     $cache = Cache::driver('json');
 
     $function($cache);
