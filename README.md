@@ -18,7 +18,6 @@ $ composer require amber/cache
 ```
 
 ## API Usage
-### Getting started
 ```php
 use Amber\Cache\Cache;
 
