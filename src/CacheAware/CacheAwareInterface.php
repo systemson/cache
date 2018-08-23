@@ -6,6 +6,8 @@ use Amber\Cache\Driver\CacheDriver;
 
 interface CacheAwareInterface
 {
+    const VERSION = 'v-0.1.2-beta';
+
     /**
      * Sets the cache driver.
      *

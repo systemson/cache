@@ -12,9 +12,4 @@ trait ConfigAwareTrait
     {
         return $this->getConfig('base_path', getcwd());
     }
-
-    public function getBaseFolderConfig()
-    {
-        return $this->getConfig('cache_path', '/tmp/cache');
-    }
 }

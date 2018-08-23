@@ -62,8 +62,7 @@ abstract class FileCache extends CacheDriver
 
         $content = $expiration . "\r\n" . $function($value);
 
-        $this->filesystem()->put($this->getBaseFolderConfig() . '/' . sha1($key), $content);
-
+        $this->filesystem()->put($this->getConfig('file_cache_path') . '/' . sha1($key), $content);
         return true;
     }
 
@@ -83,7 +82,7 @@ abstract class FileCache extends CacheDriver
             throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        $path = $this->getBaseFolderConfig() . '/' . sha1($key);
+        $path = $this->getConfig('file_cache_path') . '/' . sha1($key);
 
         if ($this->filesystem()->has($path)) {
             $this->filesystem()->delete($path);
@@ -99,7 +98,7 @@ abstract class FileCache extends CacheDriver
      */
     public function clear()
     {
-        $this->filesystem()->deleteDir($this->getBaseFolderConfig());
+        $this->filesystem()->deleteDir($this->getConfig('file_cache_path'));
 
         return true;
     }
@@ -138,8 +137,10 @@ abstract class FileCache extends CacheDriver
      */
     public function getCachedItem($key)
     {
-        if ($this->filesystem()->has($this->getBaseFolderConfig() . '/' . sha1($key))) {
-            $item = explode("\r\n", $this->filesystem()->read($this->getBaseFolderConfig() . '/' . sha1($key)), 2);
+        $path = $this->getConfig('file_cache_path') . '/' . sha1($key);
+
+        if ($this->filesystem()->has($path)) {
+            $item = explode("\r\n", $this->filesystem()->read($path), 2);
 
             return new CacheItemClass($key, $item[1] ?? null, $item[0] ?? null);
         }
