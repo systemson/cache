@@ -54,7 +54,7 @@ trait CacheAwareTrait
      *      ];
      *
      * @return array The cache config vars.
-     */.
+     */
     public function getCacheConfig()
     {
         return $this->getConfig('cache') ?? [];
