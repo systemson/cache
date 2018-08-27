@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Amber\Cache\CacheAware\CacheAwareTrait;
+use Amber\Cache\CacheAware\CacheAwareClass;
 use Amber\Cache\Driver\CacheDriver;
 use Amber\Cache\Driver\SimpleCache;
 use PHPUnit\Framework\TestCase;
@@ -11,7 +11,9 @@ class CacheAwareTest extends TestCase
 {
     public function testFileCache()
     {
-        $cache = $this->getMockForTrait(CacheAwareTrait::class);
+        $cache = $this->getMockForAbstractClass(CacheAwareClass::class);
+
+        $this->assertInstanceOf(CacheDriver::class, $cache->getCache('json'));
 
         $driver = new SimpleCache();
 

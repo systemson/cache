@@ -3,10 +3,13 @@
 namespace Amber\Cache\CacheAware;
 
 use Amber\Cache\Driver\CacheDriver;
+use Amber\Config\ConfigAwareInterface;
 
-interface CacheAwareInterface
+interface CacheAwareInterface extends ConfigAwareInterface
 {
     const VERSION = 'v-0.1.2-beta';
+
+    const CACHE_DRIVER = 'file';
 
     /**
      * Sets the cache driver.
@@ -15,7 +18,7 @@ interface CacheAwareInterface
      *
      * @return void
      */
-    public function setCache(CacheDriver $driver);
+    public function setCache(CacheDriver $driver): void;
 
     /**
      * Gets the cache driver.

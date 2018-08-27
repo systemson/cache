@@ -4,13 +4,16 @@ namespace Amber\Cache\CacheAware;
 
 use Amber\Cache\Cache;
 use Amber\Cache\Driver\CacheDriver;
+use Amber\Config\ConfigAwareTrait;
 
 trait CacheAwareTrait
 {
+    use ConfigAwareTrait;
+
     /**
      * @var The instance of the cache driver.
      */
-    protected $cacheDriver;
+    protected $cache_driver;
 
     /**
      * Sets the cache driver.
@@ -19,9 +22,9 @@ trait CacheAwareTrait
      *
      * @return void
      */
-    public function setCache(CacheDriver $driver)
+    public function setCache(CacheDriver $driver): void
     {
-        $this->cacheDriver = $driver;
+        $this->cache_driver = $driver;
     }
 
     /**
@@ -34,28 +37,21 @@ trait CacheAwareTrait
     public function getCache(): CacheDriver
     {
         /* Checks if the CacheInterface is already instantiated. */
-        if (!$this->cacheDriver instanceof CacheDriver) {
-            $this->cacheDriver = Cache::driver($this->getConfig('cache_driver'));
+        if (!$this->cache_driver instanceof CacheDriver) {
+            $this->cache_driver = Cache::driver($this->getConfig('cache_driver'));
 
-            $this->cacheDriver->setConfig($this->getCacheConfig());
+            $this->cache_driver->setConfig($this->getCacheConfig());
         }
 
-        return $this->cacheDriver;
+        return $this->cache_driver;
     }
 
     /**
      * Gets the cache config vars
      *
-     * The config cache vars must be set in a array by the key 'cache' containing the cache vars inside. Like this
-     *      $configs = [
-     *          'cache' => [
-     *              'cache_driver' => 'file',
-     *          ],
-     *      ];
-     *
      * @return array The cache config vars.
      */
-    public function getCacheConfig()
+    protected function getCacheConfig(): iterable
     {
         return $this->getConfig('cache') ?? [];
     }
