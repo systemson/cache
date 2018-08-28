@@ -21,10 +21,10 @@ class Cache
      * @var List of cache drivers.
      */
     protected static $drivers = [
-        'file'  => 'Amber\Cache\Driver\SimpleCache',
-        'json'  => 'Amber\Cache\Driver\JsonCache',
-        'array' => 'Amber\Cache\Driver\ArrayCache',
-        'apcu'  => 'Amber\Cache\Driver\ApcuCache',
+        'file'  => \Amber\Cache\Driver\SimpleCache::class,
+        'json'  => \Amber\Cache\Driver\JsonCache::class,
+        'array' => \Amber\Cache\Driver\ArrayCache::class,
+        'apcu'  => \Amber\Cache\Driver\ApcuCache::class,
     ];
 
     /**

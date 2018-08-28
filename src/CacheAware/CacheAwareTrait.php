@@ -4,12 +4,9 @@ namespace Amber\Cache\CacheAware;
 
 use Amber\Cache\Cache;
 use Amber\Cache\Driver\CacheDriver;
-use Amber\Config\ConfigAwareTrait;
 
 trait CacheAwareTrait
 {
-    use ConfigAwareTrait;
-
     /**
      * @var The instance of the cache driver.
      */
