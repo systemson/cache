@@ -18,7 +18,7 @@ interface CacheAwareInterface extends ConfigAwareInterface
      *
      * @return void
      */
-    public function setCache(CacheDriver $driver): void;
+    public function setCache(CacheDriver $driver);
 
     /**
      * Gets the cache driver.
