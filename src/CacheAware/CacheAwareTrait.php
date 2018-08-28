@@ -48,7 +48,7 @@ trait CacheAwareTrait
      *
      * @return array The cache config vars.
      */
-    protected function getCacheConfig(): iterable
+    protected function getCacheConfig(): \Traversable
     {
         return $this->getConfig('cache') ?? [];
     }
