@@ -15,11 +15,13 @@ trait CacheAwareTrait
     /**
      * Sets the cache driver.
      *
+     * @todo Should return type void.
+     *
      * @param CacheDriver $driver An instance of the cache driver.
      *
      * @return void
      */
-    public function setCache(CacheDriver $driver): void
+    public function setCache(CacheDriver $driver)
     {
         $this->cache_driver = $driver;
     }
@@ -45,6 +47,8 @@ trait CacheAwareTrait
 
     /**
      * Gets the cache config vars
+     *
+     * @todo Should return type iterable.
      *
      * @return array The cache config vars.
      */
