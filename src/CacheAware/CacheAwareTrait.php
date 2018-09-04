@@ -37,7 +37,7 @@ trait CacheAwareTrait
     {
         /* Checks if the CacheInterface is already instantiated. */
         if (!$this->cache_driver instanceof CacheDriver) {
-            $this->cache_driver = Cache::driver($this->getConfig('cache.cache_driver'));
+            $this->cache_driver = Cache::driver($this->getConfig('cache.cache_driver', 'file'));
 
             $this->cache_driver->setConfig($this->getCacheConfig());
         }
