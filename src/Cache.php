@@ -93,7 +93,7 @@ class Cache
      * Calls statically methods from the Cache driver instance.
      *
      * @param string $method The Cache driver method.
-     * @param string $args   The arguments for the Cache driver method.
+     * @param array $args    The arguments for the Cache driver method.
      *
      * @return mixed
      */

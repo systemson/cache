@@ -10,6 +10,11 @@ use Psr\Cache\CacheItemInterface;
 
 abstract class FileCache extends CacheDriver
 {
+    /**
+     * Gets a Filesystem instance.
+     *
+     * @return instance Filesystem
+     */
     public function filesystem()
     {
         return Filesystem::getInstance($this->getBasePathConfig());
