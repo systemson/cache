@@ -6,28 +6,28 @@ use Amber\Cache\Cache;
 use Lavoiesl\PhpBenchmark\Benchmark;
 
 /* Sets the vars to test */
-        $key = 'key';
-        $value = 'value';
+$key = 'key';
+$value = 'value';
 
-        $string = 'string';
-        $integer = 1;
-        $float = 1.1;
-        $array = [1,2,3,4,5];
+$string = 'string';
+$integer = 1;
+$float = 1.1;
+$array = [1,2,3,4,5];
 
-        $object = new \stdClass();
-        $object->string = 'string';
-        $object->integer = $integer;
-        $object->array = $array;
+$object = new \stdClass();
+$object->string = 'string';
+$object->integer = $integer;
+$object->array = $array;
 
-        for ($x = 0; $x < 1000; $x++) {
-            $multiple[$key . $x] = $value . $x;
-        }
+for ($x = 0; $x < 1000; $x++) {
+    $multiple[$key . $x] = $value . $x;
+}
 
-        $multiple['string'] = $string;
-        $multiple['integer'] = $integer;
-        $multiple['float'] = $float;
-        $multiple['array'] = $array;
-        $multiple['object'] = $object;
+$multiple['string'] = $string;
+$multiple['integer'] = $integer;
+$multiple['float'] = $float;
+$multiple['array'] = $array;
+$multiple['object'] = $object;
 
 $data = [
     'key' => $key,
