@@ -3,13 +3,12 @@
 namespace Amber\Cache\Driver;
 
 use Amber\Cache\Exception\InvalidArgumentException;
+use Amber\Collection\CollectionAware\CollectionAwareInterface;
+use Amber\Collection\CollectionAware\CollectionAwareTrait;
 
-class ArrayCache extends CacheDriver
+class ArrayCache extends CacheDriver implements CollectionAwareInterface
 {
-    /**
-     * @var The array containing the cached items.
-     */
-    public $cache;
+    use CollectionAwareTrait;
 
     /**
      * Get an item from the cache.
@@ -28,7 +27,7 @@ class ArrayCache extends CacheDriver
             throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        return $this->cache[$key] ?? $default;
+        return $this->getCollection()->get($key) ?? $default;
     }
 
     /**
@@ -49,9 +48,7 @@ class ArrayCache extends CacheDriver
             throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        $this->cache[$key] = $value;
-
-        return true;
+        return $this->getCollection()->set($key, $value);
     }
 
     /**
@@ -70,9 +67,7 @@ class ArrayCache extends CacheDriver
             throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        unset($this->cache[$key]);
-
-        return true;
+        return $this->getCollection()->delete($key);
     }
 
     /**
@@ -82,7 +77,7 @@ class ArrayCache extends CacheDriver
      */
     public function clear()
     {
-        $this->cache = [];
+        $this->getCollection()->clear();
 
         return true;
     }
@@ -103,6 +98,6 @@ class ArrayCache extends CacheDriver
             throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        return isset($this->cache[$key]);
+        return $this->getCollection()->has($key);
     }
 }

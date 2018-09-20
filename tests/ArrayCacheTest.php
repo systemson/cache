@@ -60,7 +60,7 @@ class ArrayCacheTest extends TestCase
 
         /* Checks for an inexistent key adding a default param */
         /* Must return the default value */
-        $this->assertSame($cache->get('unkwonKey', 'default'), 'default');
+        $this->assertSame($cache->get('unknownKey', 'default'), 'default');
 
         /* Deletes the item from cache */
         $this->assertTrue($cache->delete($key));
