@@ -3,8 +3,9 @@
 namespace Amber\Cache\Driver;
 
 use Amber\Cache\Driver\Base\FileCache;
+use SimpleXMLElement;
 
-class JsonCache extends FileCache
+class XmlCache extends FileCache
 {
     /**
      * Get an item from the cache.
@@ -18,7 +19,7 @@ class JsonCache extends FileCache
      */
     public function get($key, $default = null)
     {
-        return $this->getRaw($key) ?? json_encode($default);
+        return $this->getRaw($key) ?? $this->toXml($default);
     }
 
     /**
@@ -34,7 +35,20 @@ class JsonCache extends FileCache
      */
     public function set($key, $value, $ttl = null)
     {
-        return $this->setRaw('json_encode', $key, $value, $ttl);
+        return $this->setRaw([$this, 'toXml'], $key, $value, $ttl);
+    }
+
+    protected function toXml($value, $parent = 'root')
+    {
+        $xml = new SimpleXMLElement("<{$parent}></{$parent}>");
+
+        if (is_iterable($value)) {
+            array_walk_recursive($value, [$xml, 'addChild']);
+        } elseif (is_string($value)) {
+            $xml->addChild('', $value);
+        }
+
+        return $xml->asXML();
     }
 
     /**

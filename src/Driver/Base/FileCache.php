@@ -40,7 +40,7 @@ abstract class FileCache extends CacheDriver
         $item = $this->getCachedItem($key);
 
         if ($item && !$this->isExpired($item)) {
-            return $function ? $function($item->get()) : $item->get();
+            return !is_null($function) ? $function($item->get()) : $item->get();
         }
     }
 
@@ -65,7 +65,7 @@ abstract class FileCache extends CacheDriver
 
         $expiration = $ttl ? Carbon::now()->addMinutes($ttl) : null;
 
-        $content = $expiration . "\r\n" . $function($value);
+        $content = $expiration . PHP_EOL . $function($value);
 
         $this->filesystem()->put($this->getConfig('file_cache_path') . '/' . sha1($key), $content);
         return true;
@@ -145,7 +145,7 @@ abstract class FileCache extends CacheDriver
         $path = $this->getConfig('file_cache_path') . '/' . sha1($key);
 
         if ($this->filesystem()->has($path)) {
-            $item = explode("\r\n", $this->filesystem()->read($path), 2);
+            $item = explode(PHP_EOL, $this->filesystem()->read($path), 2);
 
             return new CacheItemClass($key, $item[1] ?? null, $item[0] ?? null);
         }

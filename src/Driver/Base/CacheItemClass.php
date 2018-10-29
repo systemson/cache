@@ -142,4 +142,9 @@ class CacheItemClass implements CacheItemInterface
 
         return false;
     }
+
+    public function __toString()
+    {
+        return $this->value;
+    }
 }
