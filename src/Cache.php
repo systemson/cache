@@ -5,6 +5,9 @@ namespace Amber\Cache;
 use Amber\Cache\Exception\InvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
 
+/**
+ * @todo MUST implement other cache drivers.
+ */
 class Cache
 {
     /**
@@ -86,7 +89,7 @@ class Cache
             return self::$instance = new $driver();
         }
 
-        throw new InvalidArgumentException("Cache driver {$driver} not found or could not be instantiated.");
+        throw new InvalidArgumentException("Cache driver \"{$driver}\" not found or could not be instantiated.");
     }
 
     /**
