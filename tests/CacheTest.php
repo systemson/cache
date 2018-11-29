@@ -41,12 +41,10 @@ class CacheTest extends TestCase
 
         $this->assertFalse(Cache::has('key'));
 
-        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
+        if (!extension_loaded('apcu') || !ini_get('apc.enabled') || (ApcuCache::isCli() && !ini_get('apc.enable_cli'))) {
             $this->expectException(\Exception::class);
 
-            Cache::driver('apcu');
-
-            return;
+            $cache = new ApcuCache();
         } else {
             $this->assertInstanceOf(
                 ApcuCache::class,

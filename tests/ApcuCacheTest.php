@@ -10,11 +10,7 @@ class ApcuCacheTest extends TestCase
 {
     public function testApcuCache()
     {
-        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
-            $this->expectException(\Exception::class);
-
-            $cache = new ApcuCache();
-        }
+        $this->checkApcuEnabled();
 
         $cache = new ApcuCache();
 
@@ -106,11 +102,7 @@ class ApcuCacheTest extends TestCase
 
     public function testGetException()
     {
-        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
-            $this->expectException(\Exception::class);
-
-            $cache = new ApcuCache();
-        }
+        $this->checkApcuEnabled();
 
         $cache = new ApcuCache();
 
@@ -120,11 +112,7 @@ class ApcuCacheTest extends TestCase
 
     public function testSetException()
     {
-        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
-            $this->expectException(\Exception::class);
-
-            $cache = new ApcuCache();
-        }
+        $this->checkApcuEnabled();
 
         $cache = new ApcuCache();
 
@@ -134,11 +122,7 @@ class ApcuCacheTest extends TestCase
 
     public function testHastException()
     {
-        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
-            $this->expectException(\Exception::class);
-
-            $cache = new ApcuCache();
-        }
+        $this->checkApcuEnabled();
 
         $cache = new ApcuCache();
 
@@ -148,15 +132,20 @@ class ApcuCacheTest extends TestCase
 
     public function testDeleteException()
     {
-        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
-            $this->expectException(\Exception::class);
-
-            $cache = new ApcuCache();
-        }
+        $this->checkApcuEnabled();
 
         $cache = new ApcuCache();
 
         $this->expectException(InvalidArgumentException::class);
         $cache->delete(1);
+    }
+
+    private function checkApcuEnabled()
+    {
+        if (!extension_loaded('apcu') || !ini_get('apc.enabled') || (ApcuCache::isCli() && !ini_get('apc.enable_cli'))) {
+            $this->expectException(\Exception::class);
+
+            $cache = new ApcuCache();
+        }
     }
 }

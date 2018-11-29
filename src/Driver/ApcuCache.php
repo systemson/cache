@@ -11,7 +11,7 @@ class ApcuCache extends CacheDriver
      */
     public function __construct()
     {
-        if (!extension_loaded('apcu') || !ini_get('apc.enabled')) {
+        if (!extension_loaded('apcu') || !ini_get('apc.enabled') || (static::isCli() && !ini_get('apc.enable_cli'))) {
             throw new \Exception('The PHP extension APCu is not enabled');
         }
     }
@@ -107,5 +107,35 @@ class ApcuCache extends CacheDriver
         }
 
         return (bool) apcu_exists($key);
+    }
+
+    /**
+     * Determines whether the script is being run on the CLI.
+     *
+     * @return bool
+     */
+    public static function isCli()
+    {
+        if (defined('STDIN')) {
+            return true;
+        }
+
+        if (php_sapi_name() === 'cli') {
+            return true;
+        }
+
+        if (array_key_exists('SHELL', $_ENV)) {
+            return true;
+        }
+
+        if (empty($_SERVER['REMOTE_ADDR']) and !isset($_SERVER['HTTP_USER_AGENT']) and count($_SERVER['argv']) > 0) {
+            return true;
+        }
+
+        if (!array_key_exists('REQUEST_METHOD', $_SERVER)) {
+            return true;
+        }
+
+        return false;
     }
 }
