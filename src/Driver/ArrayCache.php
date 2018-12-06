@@ -11,6 +11,17 @@ class ArrayCache extends CacheDriver implements CollectionAwareInterface
     use CollectionAwareTrait;
 
     /**
+     * Instantiates the Cache Driver.
+     *
+     * @param string $config The config environment variables.
+     */
+    public function __construct($config = [])
+    {
+        $this->setConfig($config);
+        $this->initCollection($config);
+    }
+
+    /**
      * Get an item from the cache.
      *
      * @param string $key     The cache key.

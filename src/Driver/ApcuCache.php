@@ -112,6 +112,8 @@ class ApcuCache extends CacheDriver
     /**
      * Determines whether the script is being run on the CLI.
      *
+     * @todo This method should be move to a helper.
+     *
      * @return bool
      */
     public static function isCli()
