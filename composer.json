@@ -38,6 +38,18 @@
         "docs": "phpdoc",
         "sniff": "phpcs --standard=PSR12 ./src",
         "fix-cs": "phpcbf --standard=PSR12 ./src",
-        "speed": "php ./tests/Benchmark.php"
+        "speed": "php ./tests/Benchmark.php",
+        "full-check": [
+            "phpunit",
+            "phpdoc",
+            "phpcs --standard=PSR12 ./src",
+            "phpcbf --standard=PSR12 ./src"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "process-timeout": 0
     }
 }

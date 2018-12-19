@@ -1,14 +1,26 @@
 <?php
+/**
+ * This file is part of the Amber/Cache package.
+ *
+ * @package Amber/Cache
+ * @author Deivi Peña <systemson@gmail.com>
+ * @license GPL-3.0-or-later
+ * @license https://opensource.org/licenses/gpl-license GNU Public License
+ */
 
 namespace Amber\Cache;
 
 use Amber\Cache\Exception\InvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
 
+use Amber\Utils\Implementations\AbstractWrapper;
+
 /**
+ * Cache driver wrapper.
+ *
  * @todo MUST implement other cache drivers.
  */
-class Cache
+class Cache extends AbstractWrapper
 {
     /**
      * @var The instance of the cache driver
@@ -16,12 +28,26 @@ class Cache
     protected static $instance;
 
     /**
-     * @var The instance of the cache driver
+     * @var The class accessor.
      */
-    protected static $config = [];
+    protected static $accessor = \Amber\Cache\Driver\SimpleCache::class;
 
     /**
-     * @var List of cache drivers.
+     * @var array The method(s) that should be publicly exposed.
+     */
+    protected static $passthru = [
+        'set',
+        'has',
+        'get',
+        'delete',
+        'clear',
+        'setMultiple',
+        'getMultiple',
+        'deleteMultiple',
+    ];
+
+    /**
+     * @var array List of cache drivers.
      */
     protected static $drivers = [
         'file'  => \Amber\Cache\Driver\SimpleCache::class,
@@ -29,48 +55,6 @@ class Cache
         'array' => \Amber\Cache\Driver\ArrayCache::class,
         'apcu'  => \Amber\Cache\Driver\ApcuCache::class,
     ];
-
-    /**
-     * Singleton implementation.
-     */
-    public static function getInstance()
-    {
-        /* Checks if the CacheInterface is already instantiated. */
-        if (!self::$instance instanceof CacheInterface) {
-            self::$instance = self::driver('file');
-        }
-
-        return self::$instance;
-    }
-
-    /**
-     * Sets the config for the current Cache driver.
-     *
-     * @param array $config An associative array of the config environment variables.
-     *
-     * @return CacheInterface An instance of the Cache driver.
-     */
-    public static function config($config)
-    {
-        /* Checks if the CacheInterface is already instantiated. */
-        if (!self::$instance instanceof CacheInterface) {
-            self::getInstance();
-        }
-
-        self::$instance->setConfig($config);
-
-        return self::$instance;
-    }
-
-    /**
-     * Resets the cache to default driver.
-     *
-     * @return CacheInterface An instance of the Cache driver.
-     */
-    public static function reset()
-    {
-        return self::$instance = null;
-    }
 
     /**
      * Returns an instance of the desired Cache driver.
@@ -86,22 +70,11 @@ class Cache
         }
 
         if (class_exists($driver)) {
-            return self::$instance = new $driver();
+            self::setAccessor($driver);
+
+            return self::$instance = self::getInstance();
         }
 
         throw new InvalidArgumentException("Cache driver \"{$driver}\" not found or could not be instantiated.");
-    }
-
-    /**
-     * Calls statically methods from the Cache driver instance.
-     *
-     * @param string $method The Cache driver method.
-     * @param array $args    The arguments for the Cache driver method.
-     *
-     * @return mixed
-     */
-    public static function __callStatic($method, $args)
-    {
-        return call_user_func_array([self::getInstance(), $method], $args);
     }
 }

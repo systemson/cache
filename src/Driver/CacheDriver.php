@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of the Amber/Cache package.
+ *
+ * @package Amber/Cache
+ * @author Deivi Peña <systemson@gmail.com>
+ * @license GPL-3.0-or-later
+ * @license https://opensource.org/licenses/gpl-license GNU Public License
+ */
 
 namespace Amber\Cache\Driver;
 
@@ -7,6 +15,9 @@ use Amber\Cache\Config\ConfigAwareTrait;
 use Amber\Validator\Validator;
 use Psr\SimpleCache\CacheInterface;
 
+/**
+ * Base class for all cache drivers.
+ */
 abstract class CacheDriver implements CacheInterface, ConfigAwareInterface
 {
     use Validator, ConfigAwareTrait;

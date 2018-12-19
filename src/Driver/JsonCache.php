@@ -1,9 +1,20 @@
 <?php
+/**
+ * This file is part of the Amber/Cache package.
+ *
+ * @package Amber/Cache
+ * @author Deivi Peña <systemson@gmail.com>
+ * @license GPL-3.0-or-later
+ * @license https://opensource.org/licenses/gpl-license GNU Public License
+ */
 
 namespace Amber\Cache\Driver;
 
 use Amber\Cache\Driver\Base\FileCache;
 
+/**
+ * Json cache driver.
+ */
 class JsonCache extends FileCache
 {
     /**
@@ -35,21 +46,5 @@ class JsonCache extends FileCache
     public function set($key, $value, $ttl = null)
     {
         return $this->setRaw('json_encode', $key, $value, $ttl);
-    }
-
-    /**
-     * Returns a json response.
-     *
-     * @param string $key The key of the cache item.
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return string echoes the cache value
-     */
-    public function response($key)
-    {
-        header('Content-Type: application/json');
-
-        echo $this->get($key);
     }
 }

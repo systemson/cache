@@ -1,14 +1,23 @@
 <?php
+/**
+ * This file is part of the Amber/Cache package.
+ *
+ * @package Amber/Cache
+ * @author Deivi Peña <systemson@gmail.com>
+ * @license GPL-3.0-or-later
+ * @license https://opensource.org/licenses/gpl-license GNU Public License
+ */
 
 namespace Amber\Cache\CacheAware;
 
 use Amber\Cache\Driver\CacheDriver;
 use Amber\Config\ConfigAwareInterface;
 
+/**
+ * CacheAware contract.
+ */
 interface CacheAwareInterface extends ConfigAwareInterface
 {
-    const VERSION = 'v-0.1.2-beta';
-
     const CACHE_DRIVER = 'file';
 
     /**

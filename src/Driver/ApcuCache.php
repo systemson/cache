@@ -1,9 +1,20 @@
 <?php
+/**
+ * This file is part of the Amber/Cache package.
+ *
+ * @package Amber/Cache
+ * @author Deivi Peña <systemson@gmail.com>
+ * @license GPL-3.0-or-later
+ * @license https://opensource.org/licenses/gpl-license GNU Public License
+ */
 
 namespace Amber\Cache\Driver;
 
 use Amber\Cache\Exception\InvalidArgumentException;
 
+/**
+ * APCu cache driver.
+ */
 class ApcuCache extends CacheDriver
 {
     /**
@@ -11,7 +22,7 @@ class ApcuCache extends CacheDriver
      */
     public function __construct()
     {
-        if (!extension_loaded('apcu') || !ini_get('apc.enabled') || (static::isCli() && !ini_get('apc.enable_cli'))) {
+        if (!static::driverEnable()) {
             throw new \Exception('The PHP extension APCu is not enabled');
         }
     }
@@ -112,7 +123,7 @@ class ApcuCache extends CacheDriver
     /**
      * Determines whether the script is being run on the CLI.
      *
-     * @todo This method should be move to a helper.
+     * @todo This method MUST be move to a helper.
      *
      * @return bool
      */
@@ -139,5 +150,19 @@ class ApcuCache extends CacheDriver
         }
 
         return false;
+    }
+
+    /**
+     * Determines whether the driver is enabled.
+     *
+     * @return bool
+     */
+    public static function driverEnable()
+    {
+        if (!extension_loaded('apcu') || !ini_get('apc.enabled') || (static::isCli() && !ini_get('apc.enable_cli'))) {
+            return false;
+        }
+
+        return true;
     }
 }

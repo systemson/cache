@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of the Amber/Cache package.
+ *
+ * @package Amber/Cache
+ * @author Deivi Peña <systemson@gmail.com>
+ * @license GPL-3.0-or-later
+ * @license https://opensource.org/licenses/gpl-license GNU Public License
+ */
 
 namespace Amber\Cache\Driver\Base;
 
@@ -8,6 +16,9 @@ use Amber\Filesystem\Filesystem;
 use Carbon\Carbon;
 use Psr\Cache\CacheItemInterface;
 
+/**
+ * Common abstract class for file based cache drivers.
+ */
 abstract class FileCache extends CacheDriver
 {
     /**

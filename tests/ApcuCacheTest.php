@@ -142,7 +142,7 @@ class ApcuCacheTest extends TestCase
 
     private function checkApcuEnabled()
     {
-        if (!extension_loaded('apcu') || !ini_get('apc.enabled') || (ApcuCache::isCli() && !ini_get('apc.enable_cli'))) {
+        if (!ApcuCache::driverEnable()) {
             $this->expectException(\Exception::class);
 
             $cache = new ApcuCache();
