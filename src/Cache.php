@@ -23,12 +23,12 @@ use Amber\Utils\Implementations\AbstractWrapper;
 class Cache extends AbstractWrapper
 {
     /**
-     * @var The instance of the cache driver
+     * @var Psr\SimpleCache\CacheInterface The instance of the cache driver
      */
     protected static $instance;
 
     /**
-     * @var The class accessor.
+     * @var string The class accessor.
      */
     protected static $accessor = \Amber\Cache\Driver\SimpleCache::class;
 
