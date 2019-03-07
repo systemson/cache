@@ -22,28 +22,37 @@
         }
     },
     "require": {
-        "php": ">=7.1.0",
+        "php": ">=7.2.0",
         "psr/cache": "^1.0",
         "psr/simple-cache": "^1.0",
         "amber/common": "dev-master"
     },
     "require-dev": {
         "phpdocumentor/phpdocumentor": "dev-master",
-        "phpunit/phpunit": "^6.5|^7.0",
+        "phpunit/phpunit": "^8.0",
         "squizlabs/php_codesniffer": "^3.3",
         "lavoiesl/php-benchmark": "^1.4"
     },
     "scripts": {
         "test": "phpunit",
-        "docs": "phpdoc",
+        "docs": [
+            "phpdoc",
+            "php sami.phar update samiConfig.php -v"
+        ],
         "sniff": "phpcs --standard=PSR12 ./src",
         "fix-cs": "phpcbf --standard=PSR12 ./src",
         "speed": "php ./tests/Benchmark.php",
+        "pull": [
+            "git pull",
+            "composer update -vvv"
+        ],
         "full-check": [
-            "phpunit",
-            "phpdoc",
-            "phpcs --standard=PSR12 ./src",
-            "phpcbf --standard=PSR12 ./src"
+            "@test",
+            "@docs",
+            "@sniff"
+        ],
+        "post-update-cmd": [
+            "@test"
         ]
     },
     "config": {

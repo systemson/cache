@@ -70,7 +70,8 @@ class ArrayCache extends CacheDriver implements CollectionAwareInterface
             throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        return $this->getCollection()->set($key, $value);
+        $this->getCollection()->set($key, $value);
+        return true;
     }
 
     /**
