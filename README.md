@@ -1,10 +1,11 @@
+![GitHub last commit](https://img.shields.io/github/last-commit/systemson/cache.svg)
 [![Latest Stable Version](https://poser.pugx.org/amber/cache/v/stable.png)](https://packagist.org/packages/amber/cache)
 [![Latest Beta Version](https://img.shields.io/packagist/vpre/amber/cache.svg)](https://packagist.org/packages/amber/cache)
+![PHP from Packagist](https://img.shields.io/packagist/php-v/amber/cache.svg)
 [![Build Status](https://travis-ci.org/systemson/cache.svg?branch=master)](https://travis-ci.org/systemson/cache)
 [![Coverage Status](https://coveralls.io/repos/github/systemson/cache/badge.svg?branch=master)](https://coveralls.io/github/systemson/cache?branch=master)
-[![PHP-Eye](https://php-eye.com/badge/amber/cache/tested.svg?style=flat)](https://php-eye.com/package/amber/cache)
-[![StyleCI](https://styleci.io/repos/126605518/shield?branch=master)](https://styleci.io/repos/126605518)
 [![Total Downloads](https://poser.pugx.org/amber/cache/downloads.png)](https://packagist.org/packages/amber/cache)
+![GitHub](https://img.shields.io/github/license/systemson/cache.svg)
 
 # Amber/Cache
 Simple cache system implementing PSR-16: interface for caching libraries
