@@ -12,23 +12,37 @@ namespace Amber\Cache\Driver\Base;
 
 use Amber\Cache\Driver\CacheDriver;
 use Amber\Cache\Exception\InvalidArgumentException;
-use Amber\Filesystem\Filesystem;
+use League\Flysystem\Filesystem;
 use Carbon\Carbon;
 use Psr\Cache\CacheItemInterface;
+use League\Flysystem\Adapter\Local;
 
 /**
  * Common abstract class for file based cache drivers.
  */
 abstract class FileCache extends CacheDriver
 {
+    protected $filesystem;
+
+    public function __construct($path)
+    {
+        $this->filesystem($path);
+    }
+
     /**
      * Gets a Filesystem instance.
      *
      * @return instance Filesystem
      */
-    public function filesystem()
+    public function filesystem(string $path = null)
     {
-        return Filesystem::getInstance($this->getBasePathConfig());
+        if (!$this->filesystem instanceof Filesystem) {
+            $local = new Local($path);
+
+            $this->filesystem = new Filesystem($local);
+        }
+
+        return $this->filesystem;
     }
 
     /**
@@ -78,7 +92,7 @@ abstract class FileCache extends CacheDriver
 
         $content = $expiration . PHP_EOL . $function($value);
 
-        $this->filesystem()->put($this->getConfig('file_cache_path') . '/' . sha1($key), $content);
+        $this->filesystem()->put(sha1($key), $content);
         return true;
     }
 
@@ -98,7 +112,7 @@ abstract class FileCache extends CacheDriver
             throw new InvalidArgumentException('Cache key must be not empty string');
         }
 
-        $path = $this->getConfig('file_cache_path') . '/' . sha1($key);
+        $path = sha1($key);
 
         if ($this->filesystem()->has($path)) {
             $this->filesystem()->delete($path);
@@ -114,7 +128,9 @@ abstract class FileCache extends CacheDriver
      */
     public function clear()
     {
-        $this->filesystem()->deleteDir($this->getConfig('file_cache_path'));
+        foreach ($this->filesystem()->listContents() as $file) {
+            $this->filesystem()->delete($file['path']);
+        }
 
         return true;
     }
@@ -153,7 +169,7 @@ abstract class FileCache extends CacheDriver
      */
     public function getCachedItem($key)
     {
-        $path = $this->getConfig('file_cache_path') . '/' . sha1($key);
+        $path = sha1($key);
 
         if ($this->filesystem()->has($path)) {
             $item = explode(PHP_EOL, $this->filesystem()->read($path), 2);

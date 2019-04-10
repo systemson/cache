@@ -42,17 +42,8 @@ trait CacheAwareTrait
      *
      * @return CacheDriver The instance of the cache driver.
      */
-    public function getCache($driver = null): CacheDriver
+    public function getCache(): CacheDriver
     {
-        $driver_class = $driver ?? $this->getConfig('cache.cache_driver', 'file');
-
-        /* Checks if the CacheInterface is already instantiated. */
-        if (!$this->cache_driver instanceof CacheDriver) {
-            $this->cache_driver = Cache::driver($driver_class);
-
-            $this->cache_driver->setConfig($this->getCacheConfig());
-        }
-
         return $this->cache_driver;
     }
 

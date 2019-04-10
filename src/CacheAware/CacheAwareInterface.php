@@ -11,15 +11,12 @@
 namespace Amber\Cache\CacheAware;
 
 use Amber\Cache\Driver\CacheDriver;
-use Amber\Config\ConfigAwareInterface;
 
 /**
  * CacheAware contract.
  */
-interface CacheAwareInterface extends ConfigAwareInterface
+interface CacheAwareInterface
 {
-    const CACHE_DRIVER = 'file';
-
     /**
      * Sets the cache driver.
      *

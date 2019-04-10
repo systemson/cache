@@ -2,8 +2,11 @@
 
 require_once 'vendor/autoload.php';
 
-use Amber\Cache\Cache;
 use Lavoiesl\PhpBenchmark\Benchmark;
+use Amber\Cache\Driver\SimpleCache as Amber;
+use Amber\Cache\Cache;
+use Symfony\Component\Cache\Simple\FilesystemCache  as Symfony;
+use Phpfastcache\Helper\Psr16Adapter as Phpfastcache;
 
 /* Sets the vars to test */
 $key = 'key';
@@ -47,80 +50,37 @@ $function = function ($cache) use ($data) {
     $cache->clear();
 
     /* Checks for an unexistent key */
-    $cache->has($key);
-
-    /* Caches an item */
-    $cache->set($key, $value);
-
-    /* Checks if that item exists in the cache */
-    $cache->has($key);
-
-    /* Gets the item from cache */
+    if (!$cache->has($key)) {
+    	$cache->set($key, $value);
+    }
     $cache->get($key);
-
-    /* Checks for an inexistent key adding a default argument */
-    $cache->get('unkwonKey', 'default');
-
-    /* Deletes the item from cache */
-    $cache->delete($key);
-
-    /* Caches an array of items */
-    $cache->setMultiple($multiple, 15);
-
-    /* Gets the array of items */
-    $cache->getMultiple(array_keys($multiple));
-
-    /* Tests single actions from a setMultiple */
-    $cache->has('string');
-    $cache->has('integer');
-    $cache->has('float');
-    $cache->has('array');
-    $cache->has('object');
-
-    $cache->get('string');
-    $cache->get('integer');
-    $cache->get('float');
-    $cache->get('array');
-    $cache->get('object');
-
-    $cache->delete('string');
-    $cache->delete('integer');
-    $cache->delete('float');
-    $cache->delete('array');
-    $cache->delete('object');
-
-    /* Deletes the array of items from the cache */
-    $cache->deleteMultiple(array_keys($multiple));
-
-    /* Clears the cache after testing */
-    $cache->clear();
 };
+
 
 $benchmark = new Benchmark();
 
-$benchmark->add('array', function () use ($function) {
-    $cache = Cache::driver('array');
+$handler = new Amber(getcwd() . '/tmp/cache');
 
+$cache = new Cache;
+$cache->pushHandler($handler);
+
+$benchmark->add('amber_file', function () use ($cache, $function) {
     $function($cache);
 });
+$cache->clear();
 
-$benchmark->add('file', function () use ($function) {
-    $cache = Cache::driver('file');
-
+$cache = new Symfony();
+$benchmark->add('symfony_file', function () use ($cache, $function) {
     $function($cache);
 });
+$cache->clear();
 
-$benchmark->add('apcu', function () use ($function) {
-    $cache = Cache::driver('apcu');
-
+$cache = new Phpfastcache('Files');
+$benchmark->add('phpfastcache_file', function () use ($cache, $function) {
     $function($cache);
 });
+$cache->clear();
 
-
-$benchmark->add('json', function () use ($function) {
-    $cache = Cache::driver('json');
-
-    $function($cache);
-});
-
+$benchmark->guessCount(10);
+//$benchmark->setCount(10000);
 $benchmark->run();

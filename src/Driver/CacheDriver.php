@@ -10,27 +10,15 @@
 
 namespace Amber\Cache\Driver;
 
-use Amber\Cache\Config\ConfigAwareInterface;
-use Amber\Cache\Config\ConfigAwareTrait;
 use Amber\Validator\Validator;
 use Psr\SimpleCache\CacheInterface;
 
 /**
  * Base class for all cache drivers.
  */
-abstract class CacheDriver implements CacheInterface, ConfigAwareInterface
+abstract class CacheDriver implements CacheInterface
 {
-    use Validator, ConfigAwareTrait;
-
-    /**
-     * Instantiates the Cache Driver.
-     *
-     * @param string $config The config environment variables.
-     */
-    public function __construct($config = [])
-    {
-        $this->setConfig($config);
-    }
+    use Validator;
 
     /**
      * Gets multiple cached items.

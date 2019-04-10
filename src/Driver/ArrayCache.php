@@ -13,6 +13,7 @@ namespace Amber\Cache\Driver;
 use Amber\Cache\Exception\InvalidArgumentException;
 use Amber\Collection\CollectionAware\CollectionAwareInterface;
 use Amber\Collection\CollectionAware\CollectionAwareTrait;
+use Amber\Collection\Collection;
 
 /**
  * Array cache driver.
@@ -28,8 +29,7 @@ class ArrayCache extends CacheDriver implements CollectionAwareInterface
      */
     public function __construct($config = [])
     {
-        $this->setConfig($config);
-        $this->initCollection($config);
+        $this->setCollection(new Collection());
     }
 
     /**
