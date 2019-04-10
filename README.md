@@ -8,7 +8,7 @@
 ![GitHub](https://img.shields.io/github/license/systemson/cache.svg)
 
 # Amber/Cache
-Simple cache system implementing PSR-16: interface for caching libraries
+Simple and fast cache system implementing PSR-16: interface for caching libraries
 
 ## Getting started
 
