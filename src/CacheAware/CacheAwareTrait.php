@@ -10,8 +10,7 @@
 
 namespace Amber\Cache\CacheAware;
 
-use Amber\Cache\Cache;
-use Amber\Cache\Driver\CacheDriver;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * CacheAware implementation.
@@ -26,11 +25,11 @@ trait CacheAwareTrait
     /**
      * Sets the cache driver.
      *
-     * @param CacheDriver $driver An instance of the cache driver.
+     * @param CacheInterface $driver An instance of the cache driver.
      *
      * @return void
      */
-    public function setCache(CacheDriver $driver): void
+    public function setCache(CacheInterface $driver): void
     {
         $this->cache_driver = $driver;
     }
@@ -38,22 +37,10 @@ trait CacheAwareTrait
     /**
      * Gets the cache driver.
      *
-     * @param CacheDriver $driver An instance of the cache driver.
-     *
-     * @return CacheDriver The instance of the cache driver.
+     * @return CacheInterface The instance of the cache driver.
      */
-    public function getCache(): CacheDriver
+    public function getCache(): CacheInterface
     {
         return $this->cache_driver;
-    }
-
-    /**
-     * Gets the cache config vars
-     *
-     * @return array The cache config vars.
-     */
-    protected function getCacheConfig(): iterable
-    {
-        return $this->getConfig('cache') ?? [];
     }
 }

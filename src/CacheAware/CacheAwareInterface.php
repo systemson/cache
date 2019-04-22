@@ -10,7 +10,7 @@
 
 namespace Amber\Cache\CacheAware;
 
-use Amber\Cache\Driver\CacheDriver;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * CacheAware contract.
@@ -20,18 +20,16 @@ interface CacheAwareInterface
     /**
      * Sets the cache driver.
      *
-     * @param CacheDriver $driver An instance of the cache driver.
+     * @param CacheInterface $driver An instance of the cache driver.
      *
      * @return void
      */
-    public function setCache(CacheDriver $driver);
+    public function setCache(CacheInterface $driver);
 
     /**
      * Gets the cache driver.
      *
-     * @param CacheDriver $driver An instance of the cache driver.
-     *
-     * @return CacheDriver The stored cache driver.
+     * @return CacheInterface The stored cache driver.
      */
-    public function getCache(): CacheDriver;
+    public function getCache(): CacheInterface;
 }

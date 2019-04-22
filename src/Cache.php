@@ -22,17 +22,17 @@ use Amber\Collection\Collection;
  */
 class Cache implements CacheInterface
 {
-	use Validator;
+    use Validator;
 
-	public function __construct()
-	{
-		$this->handlers = new Collection();
-	}
+    public function __construct()
+    {
+        $this->handlers = new Collection();
+    }
 
-	public function pushHandler(CacheInterface $handler): void
-	{
-		$this->handlers->push($handler);
-	}
+    public function pushHandler(CacheInterface $handler): void
+    {
+        $this->handlers->push($handler);
+    }
 
     /**
      * Persists data in the cache, uniquely referenced by a key with an optional expiration TTL time.
@@ -50,17 +50,17 @@ class Cache implements CacheInterface
      */
     public function set($key, $value, $ttl = null)
     {
-    	if (!$this->isString($key)) {
-    		InvalidArgumentException::mustBeString();
-    	}
+        if (!$this->isString($key)) {
+            InvalidArgumentException::mustBeString();
+        }
 
-		foreach ($this->handlers as $driver) {
-			if (!$driver->set($key, $value, $ttl)) {
-				return false;
-			}
-		}
+        foreach ($this->handlers as $driver) {
+            if (!$driver->set($key, $value, $ttl)) {
+                return false;
+            }
+        }
 
-		return true;
+        return true;
     }
 
     /**
@@ -80,13 +80,13 @@ class Cache implements CacheInterface
      */
     public function has($key)
     {
-    	if (!$this->isString($key)) {
-    		InvalidArgumentException::mustBeString();
-    	}
+        if (!$this->isString($key)) {
+            InvalidArgumentException::mustBeString();
+        }
 
-    	$driver = $this->handlers->first();
+        $driver = $this->handlers->first();
 
-    	return $driver->has($key);
+        return $driver->has($key);
     }
 
     /**
@@ -102,13 +102,13 @@ class Cache implements CacheInterface
      */
     public function get($key, $default = null)
     {
-    	if (!$this->isString($key)) {
-    		InvalidArgumentException::mustBeString();
-    	}
+        if (!$this->isString($key)) {
+            InvalidArgumentException::mustBeString();
+        }
 
-    	$driver = $this->handlers->first();
+        $driver = $this->handlers->first();
 
-    	return $driver->get($key, $default);
+        return $driver->get($key, $default);
     }
 
     /**
@@ -123,17 +123,17 @@ class Cache implements CacheInterface
      */
     public function delete($key)
     {
-    	if (!$this->isString($key)) {
-    		InvalidArgumentException::mustBeString();
-    	}
+        if (!$this->isString($key)) {
+            InvalidArgumentException::mustBeString();
+        }
 
-		foreach ($this->handlers as $driver) {
-			if (!$driver->delete($key)) {
-				return false;
-			}
-		}
+        foreach ($this->handlers as $driver) {
+            if (!$driver->delete($key)) {
+                return false;
+            }
+        }
 
-		return true;
+        return true;
     }
 
     /**
@@ -143,13 +143,13 @@ class Cache implements CacheInterface
      */
     public function clear()
     {
-		foreach ($this->handlers as $driver) {
-			if (!$driver->clear()) {
-				return false;
-			}
-		}
+        foreach ($this->handlers as $driver) {
+            if (!$driver->clear()) {
+                return false;
+            }
+        }
 
-		return true;
+        return true;
     }
 
     /**
@@ -168,13 +168,13 @@ class Cache implements CacheInterface
      */
     public function setMultiple($values, $ttl = null)
     {
-		foreach ($this->handlers as $driver) {
-			if (!$driver->setMultiple($values, $ttl)) {
-				return false;
-			}
-		}
+        foreach ($this->handlers as $driver) {
+            if (!$driver->setMultiple($values, $ttl)) {
+                return false;
+            }
+        }
 
-		return true;
+        return true;
     }
 
     /**
@@ -191,9 +191,9 @@ class Cache implements CacheInterface
      */
     public function getMultiple($keys, $default = null)
     {
-    	$driver = $this->handlers->first();
+        $driver = $this->handlers->first();
 
-    	return $driver->getMultiple($keys, $default);
+        return $driver->getMultiple($keys, $default);
     }
 
     /**
@@ -209,12 +209,12 @@ class Cache implements CacheInterface
      */
     public function deleteMultiple($keys)
     {
-		foreach ($this->handlers as $driver) {
-			if (!$driver->deleteMultiple($keys)) {
-				return false;
-			}
-		}
+        foreach ($this->handlers as $driver) {
+            if (!$driver->deleteMultiple($keys)) {
+                return false;
+            }
+        }
 
-		return true;
+        return true;
     }
 }

@@ -10,8 +10,6 @@
 
 namespace Amber\Cache\CacheAware;
 
-use Amber\Config\ConfigAwareTrait;
-
 /**
  * CacheAware abstract class.
  */
