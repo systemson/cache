@@ -31,7 +31,7 @@ class Cache implements CacheInterface
 
     public function pushHandler(CacheInterface $handler): void
     {
-        $this->handlers->push($handler);
+        $this->handlers->append($handler);
     }
 
     /**
