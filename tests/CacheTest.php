@@ -7,6 +7,7 @@ use Amber\Cache\Driver\ApcuCache;
 use Amber\Cache\Driver\ArrayCache;
 use Amber\Cache\Driver\JsonCache;
 use Amber\Cache\Driver\SimpleCache;
+use Amber\Cache\Driver\RedisCache;
 use Amber\Cache\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Phpfastcache\Helper\Psr16Adapter;
@@ -18,6 +19,7 @@ class CacheTest extends TestCase
     	$drivers['amber_file'] = new SimpleCache(getcwd() . '/tmp/cache');
     	//$drivers[] = new JsonCache(getcwd() . '/tmp/cache');
     	$drivers['amber_array'] = new ArrayCache();
+        $drivers['amber_redis'] = new RedisCache();
     	$drivers['phpfastcache_file'] = new Psr16Adapter('Files');
 
 		foreach ($drivers as $key => $driver) {
