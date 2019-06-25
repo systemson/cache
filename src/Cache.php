@@ -12,7 +12,7 @@ namespace Amber\Cache;
 
 use Amber\Cache\Exception\InvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
-use Amber\Validator\Validator;
+use Amber\Validator\ValidatorTrait;
 use Amber\Collection\Collection;
 
 /**
@@ -22,7 +22,7 @@ use Amber\Collection\Collection;
  */
 class Cache implements CacheInterface
 {
-    use Validator;
+    use ValidatorTrait;
 
     public function __construct()
     {
